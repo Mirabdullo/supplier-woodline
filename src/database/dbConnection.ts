@@ -13,6 +13,7 @@ export class Database {
         try {
             this.sequelize = new Sequelize(dbConnection);
             await this.sequelize.authenticate();
+            this.sequelize.sync();
             console.log("Connection has been astablished successfully");
         } catch (error) {
             console.log("\nUnable to connect to the database:\n\n", error);

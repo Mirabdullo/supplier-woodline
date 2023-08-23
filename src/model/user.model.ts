@@ -4,7 +4,7 @@ import { IUser } from "../interface/user.interface";
 @Table({ timestamps: true, tableName: "sellers" })
 export class User extends Model<User> implements IUser {
     @Column({
-        type: DataType.STRING,
+        type: DataType.UUID,
         primaryKey: true,
         defaultValue: DataType.UUIDV4,
         allowNull: false,

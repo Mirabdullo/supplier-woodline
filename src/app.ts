@@ -1,5 +1,4 @@
 import express from "express"
-import { dbConnection } from "./config/dbconfig"
 import cors from "cors"
 import * as bodyParser from "body-parser"
 import {Routes} from ".//interface/router.interface"
@@ -37,7 +36,7 @@ class App {
 
     private initializeMiddleware() {
         this.app.use(cors())
-        this.app.use(express.json)
+        this.app.use(express.json())
         this.app.use(bodyParser.urlencoded({ extended: true }))
         this.app.use(bodyParser.json())
     }

@@ -4,7 +4,7 @@ import { IModel } from "../interface/model.interface";
 @Table({ timestamps: true, tableName: "models" })
 export class Models extends Model<Models> implements IModel {
     @Column({
-        type: DataType.STRING,
+        type: DataType.UUID,
         primaryKey: true,
         defaultValue: DataType.UUIDV4,
         allowNull: false,
@@ -27,7 +27,7 @@ export class Models extends Model<Models> implements IModel {
     is_active: boolean;
 
     @Column({type: DataType.UUID})
-    company_id?: string;
+    company_id: string;
 
     @Column({type: DataType.BOOLEAN, allowNull: false, defaultValue: "NEW"})
     status: string;

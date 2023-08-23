@@ -8,6 +8,7 @@ const errorMiddleware = (error: HttpExeption, req: Request, res: Response, next:
         const message: string = error.message || "Internal server error"
         res.status(status).json({message})
     } catch (e) {
+        console.log(e);
         next(e)
     }
 }

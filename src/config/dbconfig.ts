@@ -1,6 +1,9 @@
 import path from 'path'
 import * as fs from 'fs'
 import { SequelizeOptions } from 'sequelize-typescript';
+import { User } from '../model/user.model';
+import { Company } from '../model/company.model';
+import { Product } from '../model/product.model';
 
 const file: string = path.join(__dirname, "../../ca-certificate.crt");
 const serverCa = [fs.readFileSync(file, 'utf8')];
@@ -12,6 +15,7 @@ export const dbConnection: SequelizeOptions = {
     port: 25060,
     password: "AVNS_Hq7s9CF7p0HNn1ikIoZ",
     dialect: "postgres", // or 'mysql', 'sqlite', 'mssql', etc.
+    models: [User, Company, Product, ],
     logging: false,
     dialectOptions: {
         ssl: {

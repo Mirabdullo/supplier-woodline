@@ -1,10 +1,10 @@
 import { Column, DataType, Model, Table } from "sequelize-typescript";
 import { ICompany } from "../interface/company.interface";
 
-@Table({ timestamps: true, tableName: "sellers" })
+@Table({ timestamps: true, tableName: "companies" })
 export class Company extends Model<Company> implements ICompany {
     @Column({
-        type: DataType.STRING,
+        type: DataType.UUID,
         primaryKey: true,
         defaultValue: DataType.UUIDV4,
         allowNull: false,
@@ -14,12 +14,12 @@ export class Company extends Model<Company> implements ICompany {
     @Column({type: DataType.STRING, allowNull: false})
     name: string;
     
-    @Column({type: DataType.STRING})
+    @Column({type: DataType.UUID, allowNull: false})
     company_id: string;
 
     @Column({type: DataType.STRING, defaultValue: "new"})
     status: string;
 
-    @Column({type: DataType.BOOLEAN})
+    @Column({type: DataType.BOOLEAN, defaultValue: true})
     is_active: boolean;
 }

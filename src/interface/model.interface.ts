@@ -5,6 +5,6 @@ export interface IModel {
     sale: number;
     code: string;
     is_active: boolean;
-    company_id?: string;
+    company_id: string;
     status: string;
 }
