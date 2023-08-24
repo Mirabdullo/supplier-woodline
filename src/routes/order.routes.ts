@@ -13,7 +13,7 @@ class OrderRoutes {
 
     public initializeRoutes() { 
         this.router.get(`${this.path}`, this.orderController.GET)
-        this.router.put(`${this.path}/check`, this.orderController.ACCEPT_OR_REJECT)
+        this.router.put(`${this.path}/check/:id`, this.orderController.ACCEPT_OR_REJECT)
     }
 }
 

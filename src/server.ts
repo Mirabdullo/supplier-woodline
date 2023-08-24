@@ -1,4 +1,5 @@
 import App from "./app";
+import FurnitureTypeRoutes from "./routes/furniture_type.routes";
 import ModelRoutes from "./routes/model.routes";
 import OrderRoutes from "./routes/order.routes";
 import ProductRoutes from "./routes/product.routes";
@@ -10,7 +11,8 @@ const app: App = new App([
     new WarehouseRoutes(),
     new ProductRoutes(),
     new ModelRoutes(),
-    new OrderRoutes()
+    new OrderRoutes(),
+    new FurnitureTypeRoutes()
 ]);
 
 app.listen();

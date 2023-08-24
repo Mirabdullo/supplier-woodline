@@ -12,7 +12,10 @@ class OrderService {
 
     public async acceptProduct(id: string, status: string) {
         const product = await this.OrderModel.findByPk(id)
-
+        let statuses = ["ACCEPTED", "REJECTED"]
+        if (!statuses.includes(status)) { 
+            throw new HttpExeption(403, "Invalid status: " + status)
+        }
         if (!product) {
             throw new HttpExeption(404, "Product not found")
         }
@@ -24,7 +27,23 @@ class OrderService {
         return "Product updated"
     }
 
-    public 
+    public async changeStatus(id: string, status: string) {
+        const product = await this.OrderModel.findByPk(id)
+        let statuses = ["ACTIVE", "DELIVERED"]
+        if (!statuses.includes(status)) { 
+            throw new HttpExeption(403, "Invalid status: " + status)
+        }
+        if (!product) {
+            throw new HttpExeption(404, "Product not found")
+        }
+
+        await this.OrderModel.update({
+            status: status
+        }, {where: {id: id}})
+        
+        return "Product updated"
+    }
+
 
 }
 
