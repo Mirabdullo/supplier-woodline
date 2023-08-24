@@ -1,5 +1,6 @@
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import { ICompany } from "../interface/company.interface";
+import { Warehouse } from "./warehouse.model";
 
 @Table({ timestamps: true, tableName: "companies" })
 export class Company extends Model<Company> implements ICompany {
@@ -22,4 +23,7 @@ export class Company extends Model<Company> implements ICompany {
 
     @Column({type: DataType.BOOLEAN, defaultValue: true})
     is_active: boolean;
+
+    @HasMany(() => Warehouse)
+    warehouse: Warehouse[]
 }

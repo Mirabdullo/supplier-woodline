@@ -1,7 +1,8 @@
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import { IFurnitureType } from "../interface/furnitureType.interface";
+import { Models } from "./model.model";
 
-@Table({ timestamps: true, tableName: "furniture_type" })
+@Table({ timestamps: true, tableName: "furniture_types" })
 export class FurnitureType extends Model<FurnitureType> implements IFurnitureType {
     @Column({
         type: DataType.UUID,
@@ -13,5 +14,8 @@ export class FurnitureType extends Model<FurnitureType> implements IFurnitureTyp
 
     @Column({type: DataType.STRING, allowNull: false})
     name: string;
+
+    @HasMany(() => Models)
+    models: Models[];
     
 }

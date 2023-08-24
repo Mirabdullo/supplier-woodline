@@ -12,6 +12,7 @@ class UserRouter {
 
     public initializeRoutes() { 
         this.router.get(`${this.path}`, this.userController.GET)
+        this.router.post(`${this.path}/login`, this.userController.LOGIN)
     }
 }
 

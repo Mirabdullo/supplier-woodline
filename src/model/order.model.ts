@@ -1,5 +1,6 @@
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { IOrder } from "../interface/order.interface";
+import { Models } from "./model.model";
 
 @Table({ timestamps: true, tableName: "orders" })
 export class Order extends Model<Order> implements IOrder {
@@ -52,4 +53,10 @@ export class Order extends Model<Order> implements IOrder {
 
     @Column({type: DataType.UUID, allowNull: true})
     seller_id?: string;
+
+    @ForeignKey(() => Models)
+    @Column({ type: DataType.UUID, allowNull: false })
+    model_id: string;
+    @BelongsTo(() => Models)
+    model: Models;
 }

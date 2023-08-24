@@ -4,6 +4,10 @@ import { SequelizeOptions } from 'sequelize-typescript';
 import { User } from '../model/user.model';
 import { Company } from '../model/company.model';
 import { Product } from '../model/product.model';
+import { Warehouse } from '../model/warehouse.model';
+import { Order } from '../model/order.model';
+import { Models } from '../model/model.model';
+import { FurnitureType } from '../model/furnitureType.model';
 
 const file: string = path.join(__dirname, "../../ca-certificate.crt");
 const serverCa = [fs.readFileSync(file, 'utf8')];
@@ -15,7 +19,7 @@ export const dbConnection: SequelizeOptions = {
     port: 25060,
     password: "AVNS_Hq7s9CF7p0HNn1ikIoZ",
     dialect: "postgres", // or 'mysql', 'sqlite', 'mssql', etc.
-    models: [User, Company, Product, ],
+    models: [User, Company, Product, Warehouse, Order, Models, FurnitureType ],
     logging: false,
     dialectOptions: {
         ssl: {

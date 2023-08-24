@@ -1,5 +1,7 @@
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { IProduct } from "../interface/product.interface";
+import { Warehouse } from "./warehouse.model";
+import { Order } from "./order.model";
 
 @Table({ timestamps: true, tableName: "storeproducts" })
 export class Product extends Model<Product> implements IProduct {
@@ -11,15 +13,21 @@ export class Product extends Model<Product> implements IProduct {
     })
     id: string;
 
-    @Column({type: DataType.UUID, allowNull: false})
+    @ForeignKey(() => Order)
+    @Column({ type: DataType.UUID, allowNull: false })
     order_id: string;
-    
-    @Column({type: DataType.UUID, allowNull: false})
-    warehouse_id: string;
+    @BelongsTo(() => Order)
+    order: Order;
 
-    @Column({type: DataType.BOOLEAN, defaultValue: false})
+    @ForeignKey(() => Warehouse)
+    @Column({ type: DataType.UUID, allowNull: false })
+    warehouse_id: string;
+    @BelongsTo(() => Warehouse)
+    warehouse: Warehouse;
+
+    @Column({ type: DataType.BOOLEAN, defaultValue: false })
     is_copied: boolean;
 
-    @Column({type: DataType.BOOLEAN, defaultValue: true})
+    @Column({ type: DataType.BOOLEAN, defaultValue: true })
     is_active: boolean;
 }
