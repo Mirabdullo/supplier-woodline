@@ -1,5 +1,6 @@
 import { Router } from "express"
 import ProductController from "../controller/product.controller"
+import { producer } from "../middleware/auth.middleware"
 
 
 class ProductRoutes {
@@ -14,8 +15,8 @@ class ProductRoutes {
     public initializeRoutes() { 
         this.router.get(`${this.path}`, this.productController.GET)
         this.router.get(`${this.path}-by-status`, this.productController.GET_BY_STATUS)
-        this.router.put(`${this.path}-transfer/:id`, this.productController.TRANSFER)
-        this.router.post(`${this.path}`, this.productController.POST)
+        this.router.put(`${this.path}-transfer/:id`, producer, this.productController.TRANSFER)
+        this.router.post(`${this.path}`, producer, this.productController.POST)
     }
 }
 
