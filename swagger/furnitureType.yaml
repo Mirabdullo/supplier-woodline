@@ -1,0 +1,55 @@
+paths:
+    /furniture-type:
+        get:
+            summary: Get FurnitureTypes
+            tags:
+                - FurnitureTypes
+            security:
+                - BearerAuth: []
+            responses:
+                "200":
+                    description: ok
+                    schema:
+                        type: array
+                        items:
+                            $ref: "#/definitions/FurnitureType"
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
+
+definitions:
+    FurnitureType:
+        type: object
+        properties:
+            id:
+                type: string
+            name:
+                type: string
+            models:
+                type: array
+                items:
+                    schema:
+                        $ref: "#/definitions/Model"
+
+    Model:
+        type: object
+        properties:
+            id:
+                type: string
+            name:
+                type: string
+            price:
+                type: number
+            sale:
+                type: number
+            code:
+                type: string
+
+    WrongToken:
+        type: object
+        properties:
+            message:
+                type: string
+                example: "Wrong Authentification Token"

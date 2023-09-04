@@ -1,0 +1,207 @@
+paths:
+    /warehouse-product:
+        get:
+            summary: Get products by company (userni tokenidan olib yuboradi)
+            tags:
+                - WarehouseProducts
+            security:
+                - BearerAuth: []
+            parameters:
+                - name: page
+                  in: query
+                  description: Page number
+                  required: false
+                  type: string
+                - name:
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: array
+                        items:
+                            $ref: "#/definitions/WarehouseProduct"
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
+
+        post:
+            summary: Create new product
+            tags:
+                - WarehouseProducts
+            security:
+                - BearerAuth: []
+            parameters:
+                - in: body
+                  name: product
+                  description: WarehouseProduct object
+                  schema:
+                      $ref: "#/definitions/PostProduct"
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: array
+                        items:
+                            $ref: "#/definitions/WarehouseProduct"
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
+
+    /warehouse-product/by-status:
+        get:
+            summary: Get products by status status (NEW, ACTIVE, DELIVERED)
+            tags:
+                - WarehouseProducts
+            security:
+                - BearerAuth: []
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: array
+                        items:
+                            $ref: "#/definitions/WarehouseProducts"
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
+
+    /warehouse-product/transfer/{id}:
+        put:
+            summary: Transfer product
+            tags:
+                - WarehouseProducts
+            security:
+                - BearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  description: Product id'
+                  required: true
+                  type: string
+                - name: warehouse
+                  in: body
+                  description: Status name
+                  required: true
+                  type: string
+            responses:
+                "200":
+                    description: Product transfered successfully
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
+
+definitions:
+    PostProduct:
+        type: object
+        properties:
+            order_id:
+                type: string
+                required: true
+            cathegory:
+                type: string
+                required: true
+            tissue:
+                type: string
+                required: true
+            title:
+                type: string
+                required: true
+            cost:
+                type: number
+                required: true
+            sale:
+                type: number
+                required: true
+            qty:
+                type: number
+                required: true
+            sum:
+                type: number
+                required: true
+            status:
+                type: string
+                required: true
+            model_id:
+                type: string
+                required: true
+
+    WarehouseProduct:
+        type: object
+        properties:
+            id:
+                type: string
+            order_id:
+                type: string
+                required: true
+            warehouse_id:
+                type: string
+                required: true
+            is_active:
+                type: boolean
+            is_copied:
+                type: string
+            order:
+                type: object
+                $ref: "#/definitions/Order"
+
+    Order:
+        type: object
+        properties:
+            id:
+                type: string
+            order_id:
+                type: string
+            cathegory:
+                type: string
+            tissue:
+                type: string
+            title:
+                type: string
+            cost:
+                type: number
+            sale:
+                type: number
+            qty:
+                type: number
+            sum:
+                type: number
+            status:
+                type: string
+            model:
+                type: object
+                $ref: "#/definitions/Model"
+    Model:
+        type: object
+        properties:
+            name:
+                type: string
+            price:
+                type: number
+            sale:
+                type: number
+            code:
+                type: string
+            furniture_type:
+                type: object
+                $ref: "#/definitions/FurnitureType"
+
+    FurnitureType:
+        type: object
+        properties:
+            name:
+                type: string
+
+    WrongToken:
+        type: object
+        properties:
+            message:
+                type: string
+                example: "Wrong Authentification Token"

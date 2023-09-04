@@ -1,6 +1,6 @@
 import { Router } from "express"
 import UserController from "../controller/user.controller"
-import { producer } from "../middleware/auth.middleware"
+import { middleware, producer } from "../middleware/auth.middleware"
 
 class UserRouter {
     public path: string = "/user"

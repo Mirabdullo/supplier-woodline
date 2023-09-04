@@ -35,7 +35,6 @@ class UserService {
         if (!user) {
             throw new HttpExeption(404, "User not found");
         }
-        console.log(user);
         const token = await signJWT({ id: user.id, role: user.role });
 
         return {

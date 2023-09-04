@@ -1,5 +1,6 @@
 import { Router } from "express"
 import WarehouseController from "../controller/warehouse.controller"
+import { middleware } from "../middleware/auth.middleware"
 
 class WarehouseRoutes {
     public path: string = "/warehouse"
@@ -12,7 +13,7 @@ class WarehouseRoutes {
     }
 
     public initializeRoutes() { 
-        this.router.get(`${this.path}`, this.warehouseController.GET)
+        this.router.get(`${this.path}`, middleware, this.warehouseController.GET)
     }
 }
 

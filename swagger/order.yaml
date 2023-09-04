@@ -1,0 +1,151 @@
+paths:
+    /order/{id}:
+        get:
+            summary: Get order by id
+            tags:
+                - Order
+            security:
+                - BearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  description: Order unique id
+                  required: true
+                  type: string
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: object
+                        $ref: "#/definitions/Order"
+    /order/accepted/{id}:
+        put:
+            summary: Update status order ACCEPTED
+            tags:
+                - Order
+            security:
+                - BearerAuth: []
+            consumes:
+                - application/json
+            produces:
+                - application/json
+            parameters:
+                - name: id
+                  in: path
+                  description: Order id'
+                  required: true
+                  type: string
+            responses:
+                "200":
+                    description: Product updated
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
+
+    /order/rejected/{id}:
+        put:
+            summary: Update status order REJECTED
+            tags:
+                - Order
+            security:
+                - BearerAuth: []
+            consumes:
+                - application/json
+            produces:
+                - application/json
+            parameters:
+                - name: id
+                  in: path
+                  description: Order id'
+                  required: true
+                  type: string
+            responses:
+                "200":
+                    description: Product updated
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
+
+    /order/delivered/{id}:
+        put:
+            summary: Update status order DELIVERD
+            tags:
+                - Order
+            security:
+                - BearerAuth: []
+            consumes:
+                - application/json
+            produces:
+                - application/json
+            parameters:
+                - name: id
+                  in: path
+                  description: Order id'
+                  required: true
+                  type: string
+            responses:
+                "200":
+                    description: Product updated
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
+
+    /order/activated/{id}:
+        put:
+            summary: Update status order ACTIVE
+            tags:
+                - Order
+            security:
+                - BearerAuth: []
+            consumes:
+                - application/json
+            produces:
+                - application/json
+            parameters:
+                - name: id
+                  in: path
+                  description: Order id'
+                  required: true
+                  type: string
+            responses:
+                "200":
+                    description: Product updated
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
+
+
+definitions:
+    Order:
+        type: object
+        properties:
+            id:
+                type: string
+            order_id:
+                type: string
+            cathegory:
+                type: string
+            tissue:
+                type: string
+            title:
+                type: string
+            cost:
+                type: number
+            sale:
+                type: number
+            qty:
+                type: number
+            sum:
+                type: number
+            status:
+                type: string
+            model_id:
+                type: string

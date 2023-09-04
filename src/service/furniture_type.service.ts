@@ -14,7 +14,7 @@ class FurnitureTypeService {
             attributes:["id", "name"],
             include: {
                 model: Models,
-                attributes: ["id", "name"],
+                attributes: ["id", "name", "price", "sale","code"],
                 where: {company_id: user.comp_id}
             }
         })

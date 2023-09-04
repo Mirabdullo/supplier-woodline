@@ -1,0 +1,53 @@
+paths:
+    /models:
+        get:
+            summary: Get models
+            tags:
+                - Models
+            security:
+                - BearerAuth: []
+            responses:
+                "200":
+                    description: ok
+                    schema:
+                        type: array
+                        items:
+                            $ref: "#/definitions/Model"
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
+
+definitions:
+    FurnitureType:
+        type: object
+        properties:
+            id:
+                type: string
+            name:
+                type: string
+
+    Model:
+        type: object
+        properties:
+            id:
+                type: string
+            name:
+                type: string
+            price:
+                type: number
+            sale:
+                type: number
+            code:
+                type: string
+            furniture_type:
+                type: object
+                $ref: '#/definitions/FurnitureType'
+
+    WrongToken:
+        type: object
+        properties:
+            message:
+                type: string
+                example: "Wrong Authentification Token"

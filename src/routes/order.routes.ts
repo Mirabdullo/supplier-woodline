@@ -1,6 +1,6 @@
 import { Router } from "express"
 import OrderController from "../controller/order.controller"
-import { producer } from "../middleware/auth.middleware"
+import { middleware, producer } from "../middleware/auth.middleware"
 
 
 class OrderRoutes {
@@ -13,8 +13,12 @@ class OrderRoutes {
     }
 
     public initializeRoutes() { 
-        this.router.get(`${this.path}`, this.orderController.GET)
-        this.router.put(`${this.path}/check/:id`, producer, this.orderController.ACCEPT_OR_REJECT)
+        this.router.get(`${this.path}`, middleware, this.orderController.GET)
+        this.router.get(`${this.path}/:id`, middleware, this.orderController.ORDER_BY_STATUS)
+        this.router.put(`${this.path}/accepted/:id`, producer, this.orderController.ACCEPT)
+        this.router.put(`${this.path}/rejected/:id`, producer, this.orderController.REJECT)
+        this.router.put(`${this.path}/delivered/:id`, producer, this.orderController.DELIVERED)
+        this.router.put(`${this.path}/activated/:id`, middleware, this.orderController.ACTIVE)
     }
 }
 

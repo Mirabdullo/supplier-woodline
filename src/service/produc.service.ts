@@ -8,59 +8,64 @@ import { Product } from "../model/product.model";
 import { Warehouse } from "../model/warehouse.model";
 import { User } from "../model/user.model";
 import { createOrderDto } from "../dto/order.dto";
+import { Op } from "sequelize";
+import { Deals } from "../model/deal.model";
 
 class ProductService {
-    private ProductModel: typeof Product = Product
-    private Warehouse: typeof Warehouse = Warehouse
-    private User: typeof User = User
-    private Models: typeof Models = Models
-    private Order: typeof Order = Order
+    private ProductModel: typeof Product = Product;
+    private Warehouse: typeof Warehouse = Warehouse;
+    private User: typeof User = User;
+    private Models: typeof Models = Models;
+    private Order: typeof Order = Order;
 
-    public async getNewProduct(id: string) {
-        const user = await this.User.findByPk(id)
+    public async getNewProduct(id: string, page: number, limit: number) {
+        const user = await this.User.findByPk(id);
 
-        return await this.ProductModel.findAll({
+        const offset = (page - 1) * limit;
+
+        return await Order.findAll({
             where: {
-                '$order.status$': 'NEW',
-                '$order.model.company_id$': user.comp_id,
-                is_active: true
+                status: "NEW",
+                "$model.company_id$": user.comp_id,
+                is_active: true,
             },
+            attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status"],
             include: [
                 {
-                    model: Order,
-                    as: "order",
-                    attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status"],
+                    model: Models,
+                    attributes: ["name", "price", "sale", "code"],
                     include: [
                         {
-                            model: Models,
-                            attributes: ["name", "price", "cost", "sale", "code"],
-                            include: [
-                                {
-                                    model: FurnitureType,
-                                    attributes: ["name"]
-                                }
-                            ]
+                            model: FurnitureType,
+                            attributes: ["name"],
                         },
-
-                    ]
-                }
-            ]
-        })
+                    ],
+                },
+                {
+                    model: Deals,
+                    attributes: ["id", "delivery_date", "rest"],
+                },
+            ],
+            offset,
+            limit,
+            order: [["createdAt", "ASC"]],
+        });
     }
 
+    public async getProduct(id: string, status: string, page: number, limit: number) {
+        const user = await this.User.findByPk(id);
 
-    public async getProduct(id: string, status: string) {
-        const user = await this.User.findByPk(id)
-        
-        let options = ["NEW", "ACTIVE", "DELIVERED"]
+        const offset = (page - 1) * limit;
+
+        let options = ["NEW", "ACTIVE", "DELIVERED"];
         if (!options.includes(status)) {
-            throw new HttpExeption(403, "Status invalid")
+            throw new HttpExeption(403, "Status invalid");
         }
-        return await this.ProductModel.findAll({
+        return await this.ProductModel.findAndCountAll({
             where: {
-                '$order.status$': status,
-                '$order.model.company_id$': user.comp_id,
-                is_active: true
+                "$order.status$": status,
+                "$order.model.company_id$": user.comp_id,
+                is_active: true,
             },
             attributes: ["id"],
             include: [
@@ -75,71 +80,159 @@ class ProductService {
                             include: [
                                 {
                                     model: FurnitureType,
-                                    attributes: ["name"]
-                                }
-                            ]
+                                    attributes: ["name"],
+                                },
+                            ],
                         },
+                    ],
+                },
+            ],
+            offset,
+            limit,
+            order: [["deletedAt", "DESC"]],
+        });
+    }
 
-                    ]
-                }
-            ]
-        })
+    public async search(id: string, page: number, limit: number, search?: string, filter?: string, startDate?: Date, endDate?: Date) {
+        const user = await this.User.findByPk(id);
+
+        const offset = (page - 1) * limit;
+        let optionf = {};
+        let options = {};
+
+        let dateOptions: any = {}
+
+        if (search) {
+            options = {
+                [Op.or]: [
+                    { order_id: { [Op.iLike]: `%${search}%` } },
+                    { "$model.name$": { [Op.iLike]: `%${search}%` } },
+                    { tissue: { [Op.iLike]: `%${search}%` } },
+                ],
+            };
+        }
+
+        if (filter === "склад") {
+            filter = "продажa со склада"
+        }
+
+        if (filter) {
+            optionf = {
+                [Op.or]: [{ status: filter }, { "$model.name$": filter }, { cathegory: filter}],
+            };
+        }
+        
+        let dateO: any = {}
+        if (startDate && !endDate) {
+            dateOptions.startDate = new Date(startDate)
+            dateOptions.endDate = new Date()
+            dateO.createdAt = {
+                [Op.between]: [new Date(startDate), new Date()]
+            }
+        } else if (startDate && endDate) { 
+            dateOptions.startDate = new Date(startDate)
+            dateOptions.endDate = new Date(endDate)
+            dateO.createdAt = {
+                [Op.between]: [new Date(startDate), new Date(endDate)]
+            }
+        } else if (!startDate && endDate) {
+            let date = new Date(endDate)
+            dateOptions.startDate = new Date(date.setDate(date.getDate() - 30))
+            dateOptions.endDate = new Date(endDate)
+            dateO.createdAt = {
+                [Op.between]: [new Date(date.setDate(date.getDate() - 30)), new Date(endDate)]
+            }
+        } else {
+            dateOptions
+        }
+
+       
+        const { count, rows: products } = await Order.findAndCountAll({
+            where: {
+                [Op.and]: [options, optionf],
+                ...dateO,
+                "$model.company_id$": user.comp_id,
+                is_active: true,
+            },
+            attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status"],
+            include: [
+                {
+                    model: Models,
+                    attributes: ["name", "price", "sale", "code"],
+                    include: [
+                        {
+                            model: FurnitureType,
+                            attributes: ["name"],
+                        },
+                    ],
+                },
+                {
+                    model: Deals,
+                    attributes: ["id", "delivery_date", "rest"],
+                },
+            ],
+            offset,
+            limit,
+            order: [["createdAt", "ASC"]],
+        });
+
+        return { totalAmount: count, products };
     }
 
     public async transferProduct(id: string, warehouseId: string) {
         const product = await this.ProductModel.findOne({
-            where: {order_id: id}
-        })
+            where: { order_id: id },
+        });
         if (!product) {
-            throw new HttpExeption(404, "Product not found")
+            throw new HttpExeption(404, "Product not found");
         }
 
-        const warehouse = await Warehouse.findByPk(warehouseId)
+        const warehouse = await Warehouse.findByPk(warehouseId);
 
         if (!warehouse) {
-            throw new HttpExeption(404, "Warehouse not found")
+            throw new HttpExeption(404, "Warehouse not found");
         }
 
-        await this.Order.update({
-            status: "TRANSFERED"
-        }, {where: {id: id}})
-        
-        product.is_active = false
-        await product.save()
+        await this.Order.update(
+            {
+                status: "TRANSFERED",
+            },
+            { where: { id: id } }
+        );
+
+        product.is_active = false;
+        await product.save();
 
         await this.ProductModel.create({
             warehouse_id: warehouseId,
             order_id: id,
-            is_active: true
-        })
-        return "Product transfered successfully"
+            is_active: true,
+        });
+        return "Product transfered successfully";
     }
 
-    public async postProduct(id: string, data: createOrderDto) { 
-        const user = await this.User.findByPk(id)
-        const warehouse = await this.Warehouse.findOne({where: {company_id: user.comp_id}})
+    public async postProduct(id: string, data: createOrderDto) {
+        const user = await this.User.findByPk(id);
+        const warehouse = await this.Warehouse.findOne({ where: { company_id: user.comp_id } });
         if (!warehouse) {
-            throw new HttpExeption(404, "Warehouse not found")
+            throw new HttpExeption(404, "Warehouse not found");
         }
 
-        const model = await this.Models.findAll({ where: { company_id: user.comp_id } })
-        const model_ids = model.map((mod) => mod.id)
+        const model = await this.Models.findAll({ where: { company_id: user.comp_id } });
+        const model_ids = model.map((mod) => mod.id);
 
         if (!model_ids.includes(data.model_id)) {
-            throw new HttpExeption(404, "Invalid model")
+            throw new HttpExeption(404, "Invalid model");
         }
 
-        const order = await this.Order.create(data)
+        const order = await this.Order.create(data);
 
         return await this.ProductModel.create({
             warehouse_id: warehouse.id,
             order_id: order.id,
-            is_active: true
-        })
+            is_active: true,
+        });
     }
-
-
-
 }
 
-export default ProductService
+export default ProductService;

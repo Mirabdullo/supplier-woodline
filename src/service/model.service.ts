@@ -14,7 +14,7 @@ class ModelService {
             attributes: ["name", "code", "price", "sale"],
             include: {
                 model: FurnitureType,
-                attributes: ["name"]
+                attributes: ["id", "name"]
             }
         })
     }

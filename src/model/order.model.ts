@@ -1,6 +1,7 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { IOrder } from "../interface/order.interface";
 import { Models } from "./model.model";
+import { Deals } from "./deal.model";
 
 @Table({ timestamps: true, tableName: "orders" })
 export class Order extends Model<Order> implements IOrder {
@@ -35,6 +36,12 @@ export class Order extends Model<Order> implements IOrder {
 
     @Column({type: DataType.DECIMAL})
     sum: number;
+
+    @ForeignKey(() => Deals)
+    @Column({ type: DataType.UUID })
+    deal_id: string
+    @BelongsTo(() => Deals)
+    deal: Deals
 
     @Column({type: DataType.BOOLEAN})
     is_first: boolean;

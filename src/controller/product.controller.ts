@@ -11,7 +11,11 @@ class ProductController {
         try {
             const token = req.headers.authorization.split(" ")[1]
             const user = verifyJWT(token)
-            res.json(await this.productService.getNewProduct(user.id))
+
+            const page: number = +req.query.page || 1;
+            const limit: number = +req.query.limit || 10
+
+            res.json(await this.productService.getNewProduct(user.id, page, limit))
         } catch (error) {
             console.log(error);
             next(new HttpExeption(error.status, error.message))
@@ -25,7 +29,32 @@ class ProductController {
 
             const status: string | any = req.query.status
 
-            res.json(await this.productService.getProduct(user.id, status))
+            const page: number = +req.query.page || 1;
+            const limit: number = +req.query.limit || 10
+
+
+            res.json(await this.productService.getProduct(user.id, status, page, limit))
+        } catch (error) {
+            console.log(error);
+            next(new HttpExeption(error.status, error.message))
+        }
+    }
+
+    public ALL = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const token = req.headers.authorization.split(" ")[1]
+            const user = verifyJWT(token)
+
+            const search: any = req.query.search
+            const filter: any = req.query.filter
+
+            const page: number = +req.query.page || 1;
+            const limit: number = +req.query.limit || 10;
+
+            const startDate: Date | any = req.query.startDate
+            const endDate: Date | any = req.query.endDate
+
+            res.json(await this.productService.search(user.id, page, limit, search, filter, startDate, endDate))
         } catch (error) {
             console.log(error);
             next(new HttpExeption(error.status, error.message))

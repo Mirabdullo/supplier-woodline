@@ -1,0 +1,43 @@
+paths:
+    /user/login:
+        post:
+            summary: Login
+            tags:
+                - Auth
+            security:
+                - BearerAuth: []
+            description: User login
+            parameters:
+                - in: body
+                  name: Authbody
+                  description: Login body
+                  required: true
+                  schema:
+                      type: object
+                      properties:
+                          phone:
+                              type: string
+                              required: true
+                          password:
+                              type: string
+                              required: true
+
+            responses:
+                "200":
+                    description: ok
+                    schema:
+                        type: object
+                        $ref: "#/definitions/Tokne"
+
+definitions:
+    Token:
+        type: object
+        properties:
+            token:
+                type: string
+            company_id:
+                type: string
+            role:
+                type: string
+            name:
+                type: string

@@ -1,5 +1,6 @@
 import { Router } from "express"
 import FurnitureTypeController from "../controller/furniture_type.controller"
+import { middleware } from "../middleware/auth.middleware"
 
 
 class FurnitureTypeRoutes {
@@ -12,7 +13,7 @@ class FurnitureTypeRoutes {
     }
 
     public initializeRoutes() { 
-        this.router.get(`${this.path}`, this.furnitureTypeController.GET)
+        this.router.get(`${this.path}`,middleware, this.furnitureTypeController.GET)
     }
 }
 
