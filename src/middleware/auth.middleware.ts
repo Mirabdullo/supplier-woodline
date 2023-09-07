@@ -59,6 +59,8 @@ const storekeeper = async (req: Request, res: Response, next: NextFunction) => {
         if (decode.role !== "STOREKEEPER") { 
             return next(new HttpExeption(401, "You are not allowed to access"))
         }
+
+        next()
     } catch (error) {
         console.log(error);
         next(new HttpExeption(error.status, error.message))
@@ -94,6 +96,8 @@ const middleware = async (req: Request, res: Response, next: NextFunction) => {
         if (!roles.includes(decode.role)) { 
             return next(new HttpExeption(401, "You are not allowed to access"))
         }
+
+        next()
     } catch (error) {
         console.log(error);
         next(new HttpExeption(error.status, error.message))

@@ -1,30 +1,29 @@
 paths:
     /warehouse-product:
-        get:
-            summary: Get products by company (userni tokenidan olib yuboradi)
-            tags:
-                - WarehouseProducts
-            security:
-                - BearerAuth: []
-            parameters:
-                - name: page
-                  in: query
-                  description: Page number
-                  required: false
-                  type: string
-                - name:
-            responses:
-                "200":
-                    description: OK
-                    schema:
-                        type: array
-                        items:
-                            $ref: "#/definitions/WarehouseProduct"
-                "401":
-                    description: Invalid token
-                    schema:
-                        type: object
-                        $ref: "#/definitions/WrongToken"
+        # get:
+        #     summary: Get products by company (userni tokenidan olib yuboradi)
+        #     tags:
+        #         - WarehouseProducts
+        #     security:
+        #         - BearerAuth: []
+        #     parameters:
+        #         - name: page
+        #           in: query
+        #           description: Page number
+        #           required: false
+        #           type: string
+        #     responses:
+        #         "200":
+        #             description: OK
+        #             schema:
+        #                 type: array
+        #                 items:
+        #                     $ref: "#/definitions/WarehouseProduct"
+        #         "401":
+        #             description: Invalid token
+        #             schema:
+        #                 type: object
+        #                 $ref: "#/definitions/WrongToken"
 
         post:
             summary: Create new product
@@ -51,26 +50,80 @@ paths:
                         type: object
                         $ref: "#/definitions/WrongToken"
 
-    /warehouse-product/by-status:
+    # /warehouse-product/by-status:
+    #     get:
+    #         summary: Get products by status status (NEW, ACTIVE, DELIVERED)
+    #         tags:
+    #             - WarehouseProducts
+    #         security:
+    #             - BearerAuth: []
+    #         responses:
+    #             "200":
+    #                 description: OK
+    #                 schema:
+    #                     type: array
+    #                     items:
+    #                         $ref: "#/definitions/WarehouseProducts"
+    #             "401":
+    #                 description: Invalid token
+    #                 schema:
+    #                     type: object
+    #                     $ref: "#/definitions/WrongToken"
+
+
+    # /warehouse-product:
         get:
-            summary: Get products by status status (NEW, ACTIVE, DELIVERED)
+            summary: Productlarni search filter start date endate orqli pagination bilan tokendagi userga tegishlilarini olish
             tags:
                 - WarehouseProducts
             security:
                 - BearerAuth: []
+            parameters:
+                - name: search
+                  in: query
+                  description: OrderId, modelName yoki tissue orqali search qilish
+                  required: false
+                  type: string
+                - name: filter
+                  in: query
+                  description: Status, modelName yoki category boyicha filter qilish
+                  required: false
+                  type: string
+                - name: startDate
+                  in: query
+                  description: Agar endate kiritilmasa startDatedan hozirga vaqt oraligida create bolgan Productlar
+                  required: false
+                  type: string
+                  format: 'yyyy-MM-dd'
+                - name: endDate
+                  in: query
+                  description: Agar startDate kiritilmasa endatedan boshlab 30 kun avvalgi vaqt oraligida create bolgan Productlar
+                  required: false
+                  type: string
+                  format: 'yyyy-MM-dd'
+                - name: page
+                  in: query
+                  description: Page raqami default 1ni oladi
+                  required: false
+                  type: number
+                - name: limit
+                  in: query
+                  description: Limit soni default 10ni oladi
+                  required: false
+                  type: number
             responses:
                 "200":
                     description: OK
                     schema:
                         type: array
                         items:
-                            $ref: "#/definitions/WarehouseProducts"
+                            $ref: "#/definitions/WarehouseProduct"
                 "401":
                     description: Invalid token
                     schema:
                         type: object
                         $ref: "#/definitions/WrongToken"
-
+                    
     /warehouse-product/transfer/{id}:
         put:
             summary: Transfer product

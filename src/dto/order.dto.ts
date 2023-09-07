@@ -21,14 +21,6 @@ export class createOrderDto {
     model_id: string;
 
     @IsNumber()
-    cost: number;
-
-    @IsNumber()
-    sale: number;
-
-    @IsNumber()
     qty: number;
 
-    @IsNumber()
-    sum: number;
 }

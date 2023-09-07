@@ -1,7 +1,25 @@
 paths:
+    /order/get-id}:
+        get:
+            summary: Get order by id yo'q bo'lsa null keladi
+            tags:
+                - Order
+            security:
+                - BearerAuth: []
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: string
+                        example: 432352
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
     /order/{id}:
         get:
-            summary: Get order by id
+            summary: Get order by id yo'q bo'lsa null keladi
             tags:
                 - Order
             security:
@@ -18,6 +36,12 @@ paths:
                     schema:
                         type: object
                         $ref: "#/definitions/Order"
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
+
     /order/accepted/{id}:
         put:
             summary: Update status order ACCEPTED
@@ -25,10 +49,6 @@ paths:
                 - Order
             security:
                 - BearerAuth: []
-            consumes:
-                - application/json
-            produces:
-                - application/json
             parameters:
                 - name: id
                   in: path
@@ -51,10 +71,6 @@ paths:
                 - Order
             security:
                 - BearerAuth: []
-            consumes:
-                - application/json
-            produces:
-                - application/json
             parameters:
                 - name: id
                   in: path
@@ -63,7 +79,7 @@ paths:
                   type: string
             responses:
                 "200":
-                    description: Product updated
+                    description: Product accepted
                 "401":
                     description: Invalid token
                     schema:
@@ -77,10 +93,6 @@ paths:
                 - Order
             security:
                 - BearerAuth: []
-            consumes:
-                - application/json
-            produces:
-                - application/json
             parameters:
                 - name: id
                   in: path
@@ -89,7 +101,7 @@ paths:
                   type: string
             responses:
                 "200":
-                    description: Product updated
+                    description: Product delivered
                 "401":
                     description: Invalid token
                     schema:
@@ -115,13 +127,12 @@ paths:
                   type: string
             responses:
                 "200":
-                    description: Product updated
+                    description: Product activated
                 "401":
                     description: Invalid token
                     schema:
                         type: object
                         $ref: "#/definitions/WrongToken"
-
 
 definitions:
     Order:

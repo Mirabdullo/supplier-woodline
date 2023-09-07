@@ -4,96 +4,99 @@ import { HttpExeption } from "../httpExeption/httpExeption";
 import { verifyJWT } from "../service/jwt.service";
 
 class OrderController {
-    public orderService = new OrderService()
-
+    public orderService = new OrderService();
 
     public GET = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            res.json(await this.orderService.getOrder())
+            res.json(await this.orderService.getOrder());
         } catch (error) {
             console.log(error);
-            next(new HttpExeption(error.status, error.message))
+            next(new HttpExeption(error.status, error.message));
         }
-    }
+    };
 
     public ACCEPT = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const token = req.headers.authorization.split(" ")[1]
-            const user = verifyJWT(token)
-            
-            const id: string = req.params.id
+            const token = req.headers.authorization.split(" ")[1];
+            const user = verifyJWT(token);
 
-            if (!id) { 
-                return res.status(404).json("Id not found")
+            const id: string = req.params.id;
+
+            if (!id) {
+                return res.status(404).json("Id not found");
             }
 
-            res.json(await this.orderService.acceptProduct(user.id, id))
+            res.json(await this.orderService.acceptProduct(user.id, id));
         } catch (error) {
             console.log(error);
-            next(new HttpExeption(error.status, error.message))
+            next(new HttpExeption(error.status, error.message));
         }
-    }
-
+    };
 
     public REJECT = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const id: string = req.params.id
+            const id: string = req.params.id;
 
-            if (!id) { 
-                return res.status(404).json("Id not found")
+            if (!id) {
+                return res.status(404).json("Id not found");
             }
 
-            res.json(await this.orderService.rejectProduct(id))
+            res.json(await this.orderService.rejectProduct(id));
         } catch (error) {
             console.log(error);
-            next(new HttpExeption(error.status, error.message))
+            next(new HttpExeption(error.status, error.message));
         }
-    }
+    };
 
     public ACTIVE = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const id: string = req.params.id
+            const id: string = req.params.id;
 
-            if (!id) { 
-                return res.status(404).json("Id not found")
+            if (!id) {
+                return res.status(404).json("Id not found");
             }
 
-            res.json(await this.orderService.activateProduct(id))
+            res.json(await this.orderService.activateProduct(id));
         } catch (error) {
             console.log(error);
-            next(new HttpExeption(error.status, error.message))
+            next(new HttpExeption(error.status, error.message));
         }
-    }
-
+    };
 
     public DELIVERED = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const id: string = req.params.id
+            const id: string = req.params.id;
 
-            if (!id) { 
-                return res.status(404).json("Id not found")
+            if (!id) {
+                return res.status(404).json("Id not found");
             }
 
-            res.json(await this.orderService.deliveredProduct(id))
+            res.json(await this.orderService.deliveredProduct(id));
         } catch (error) {
             console.log(error);
-            next(new HttpExeption(error.status, error.message))
+            next(new HttpExeption(error.status, error.message));
         }
-    }
+    };
 
-
-    public async ORDER_BY_STATUS(req: Request, res: Response, next: NextFunction) {
+    public CHECK_ID = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const id: string = req.params.id
-
-            res.json(await this.orderService.orderById(id))
+            const id = req.params.id;
+            res.json(await this.orderService.checkId(id));
         } catch (error) {
             console.log(error);
-            next(new HttpExeption(error.status,error.message))
+            next(new HttpExeption(error.status, error.message));
         }
-    }
+    };
 
-    
+    public GET_ID = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            console.log("object");
+            res.json(await this.orderService.getId());
+        } catch (error) {
+            console.log(error);
+            next(new HttpExeption(error.status, error.message));
+        }
+    };
 }
 
-export default OrderController
+export default OrderController;

@@ -4,7 +4,7 @@ import { Company } from "./company.model";
 import { Product } from "./product.model";
 import { User } from "./user.model";
 
-@Table({ timestamps: true, tableName: "warehouse" })
+@Table({ timestamps: true, tableName: "warehouse", paranoid: true })
 export class Warehouse extends Model<Warehouse> implements IWarehouse {
     @Column({
         type: DataType.UUID,
@@ -14,7 +14,7 @@ export class Warehouse extends Model<Warehouse> implements IWarehouse {
     })
     id: string;
 
-    @Column({ type: DataType.STRING, allowNull: false })
+    @Column({ type: DataType.STRING})
     name: string;
 
     @ForeignKey(() => Company)
@@ -29,11 +29,14 @@ export class Warehouse extends Model<Warehouse> implements IWarehouse {
     @BelongsTo(() => User)
     user: User;
 
-    @Column({ type: DataType.STRING, defaultValue: "NEW" })
+    @Column({ type: DataType.STRING, allowNull: false, defaultValue: "NEW" })
     status: string;
 
-    @Column({ type: DataType.STRING, defaultValue: "склад" })
+    @Column({ type: DataType.STRING, allowNull: false, defaultValue: "склад" })
     type: string;
+
+    @Column({ type: DataType.DATE, defaultValue: null })
+    deletedAt: string;
 
     @HasMany(() => Product)
     products: Product[];

@@ -3,7 +3,44 @@ import { Order } from "../model/order.model";
 import { Product } from "../model/product.model";
 import { User } from "../model/user.model";
 import { Warehouse } from "../model/warehouse.model";
-import ProductService from "./produc.service";
+
+
+function makeSixDigit(number) {
+    const strNumber = number.toString();
+    if (strNumber.length < 6) {
+        return strNumber.padStart(6, "0");
+    }
+    return strNumber;
+}
+
+function getRandomNumberFromArray(arr) {
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    return arr[randomIndex];
+}
+
+function generateId(idArray: { order_id: string }[]): string {
+    const digits: number = 5;
+    const maxAttempts: number = 100;
+    let attempts: number = 0;
+    let randomNumber: string = "0";
+
+    const existingIds: string[] = idArray.map((e) => e.order_id);
+    const availableStartDigits: number[] = [1, 3, 4, 5, 8];
+
+    do {
+        const randomStart: number = getRandomNumberFromArray(availableStartDigits);
+        randomNumber = `${randomStart}${Math.floor(Math.random() * Math.pow(10, digits))}`;
+        randomNumber = makeSixDigit(randomNumber);
+        attempts++;
+    } while (existingIds.includes(randomNumber.toString()) && attempts < maxAttempts);
+
+    if (attempts === maxAttempts) {
+        return "Error";
+    }
+
+    return randomNumber;
+}
+
 
 class OrderService {
     public OrderModel: typeof Order = Order
@@ -26,8 +63,8 @@ class OrderService {
             throw new HttpExeption(404, "Product not found")
         }
 
-        if (product.status !== "NEW") {
-            throw new HttpExeption(403, "Product Already accepted or rejected")
+        if (product.status !== "NEW" && product.status !== "REJECTED") {
+            throw new HttpExeption(403, "Product Already accepted")
         }
 
         await this.OrderModel.update({
@@ -39,7 +76,7 @@ class OrderService {
             warehouse_id: warehouse.id
         })
         
-        return "Product updated"
+        return "Product accepted"
     }
 
     public async rejectProduct(id: string) {
@@ -58,7 +95,7 @@ class OrderService {
         }, { where: { id: id } })
 
         
-        return "Product updated"
+        return "Product rejected"
     }
 
 
@@ -69,7 +106,7 @@ class OrderService {
             throw new HttpExeption(404, "Product not found")
         }
 
-        if (product.status !== "ACTIVE") {
+        if (product.status !== "ACTIVE" && product.status !== "ACCEPTED") {
             throw new HttpExeption(403, "Product not active")
         }
 
@@ -77,7 +114,7 @@ class OrderService {
             status: "DELIVERED"
         }, {where: {id: id}})
         
-        return "Product updated"
+        return "Product delivered"
     }
 
     public async activateProduct(id: string) {
@@ -92,20 +129,20 @@ class OrderService {
         }
 
         await this.OrderModel.update({
-            status: "REJECTED"
+            status: "ACTIVE"
         }, {where: {id: id}})
         
-        return "Product updated"
+        return "Product activated"
     }
 
 
-    public async orderById(id: string) {
-        const product = await this.OrderModel.findByPk(id)
-        if (!product) {
-            throw new HttpExeption(404, "Product not found")
-        }
+    public async checkId(id: string) {
+        return await this.OrderModel.findOne({ where: { order_id: id } })
+    }
 
-        return product
+    public async getId() {
+        const orders = await this.OrderModel.findAll({attributes: ["order_id"], order: [["createdAt", "DESC"]]})
+        return generateId(orders)
     }
 
 
