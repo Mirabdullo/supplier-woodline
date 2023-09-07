@@ -2,9 +2,13 @@
   "name": "supplier_woodline",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
-    "dev": "nodemon src/server.ts"
+    "prebuild": "rimraf ./dist",
+    "dev": "npx nodemon",
+    "build": "npm run prebuild && npx tsc",
+    "start": "npm run build && node dist/main",
+    "bos": "nodemon src/server.ts"
   },
   "keywords": [],
   "author": "",
