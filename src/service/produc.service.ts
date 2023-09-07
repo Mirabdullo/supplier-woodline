@@ -93,12 +93,14 @@ class ProductService {
         });
     }
 
-    public async search(id: string, page: number, limit: number, search?: string, filter?: string, startDate?: Date, endDate?: Date) {
+    public async search(id: string, page: number, limit: number, search?: string, status?: string, name?:string, type?:string, startDate?: Date, endDate?: Date) {
         const user = await this.User.findByPk(id);
 
         const offset = (page - 1) * limit;
-        let optionf = {};
         let options = {};
+        let optionStatus = {}
+        let optionName = {}
+        let optionType = {}
 
         let dateOptions: any = {}
 
@@ -112,14 +114,24 @@ class ProductService {
             };
         }
 
-        if (filter === "склад") {
-            filter = "продажa со склада"
+        if (type) {
+            optionType = {
+                cathegory: type === "склад" ? "продажa со склада" : "заказ"
+            }
+        }
+        let statusArray = ["ACCEPTED", "REJECTED", "ACTIVE", "NEW"]
+        if (status) {
+            if (statusArray.includes(status)) {
+                optionStatus = {
+                    status: status
+                }
+            }
         }
 
-        if (filter) {
-            optionf = {
-                [Op.or]: [{ status: filter }, { "$model.name$": filter }, { cathegory: filter}],
-            };
+        if (name) {
+            optionName = {
+                "$model.name$": name
+            }
         }
         
         let dateO: any = {}
@@ -149,7 +161,10 @@ class ProductService {
        
         const { count, rows: products } = await Order.findAndCountAll({
             where: {
-                [Op.and]: [options, optionf],
+                ...options,
+                ...optionStatus, 
+                ...optionName,
+                ...optionType,
                 ...dateO,
                 "$model.company_id$": user.comp_id,
                 is_active: true,

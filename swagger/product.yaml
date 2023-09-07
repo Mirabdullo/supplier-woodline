@@ -84,11 +84,31 @@ paths:
                   description: OrderId, modelName yoki tissue orqali search qilish
                   required: false
                   type: string
-                - name: filter
+                - name: status
                   in: query
-                  description: Status, modelName yoki category boyicha filter qilish
+                  description: Product status
                   required: false
                   type: string
+                  enum:
+                      - NEW
+                      - ACCEPTED
+                      - ACTIVE
+                      - REJECTED
+                  default: ACTIVE
+                - name: name
+                  in: query
+                  description: Product model name
+                  required: false
+                  type: string
+                - name: type
+                  in: query
+                  description: Product cathegory
+                  required: false
+                  type: string
+                  enum:
+                      - склад
+                      - заказ
+                  default: склад
                 - name: startDate
                   in: query
                   description: Agar endate kiritilmasa startDatedan hozirga vaqt oraligida create bolgan Productlar

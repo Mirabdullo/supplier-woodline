@@ -46,7 +46,9 @@ class ProductController {
             const user = verifyJWT(token)
 
             const search: any = req.query.search
-            const filter: any = req.query.filter
+            const status: any = req.query.status
+            const name: any = req.query.name
+            const type: any = req.query.type
 
             const page: number = +req.query.page || 1;
             const limit: number = +req.query.limit || 10;
@@ -54,7 +56,7 @@ class ProductController {
             const startDate: Date | any = req.query.startDate
             const endDate: Date | any = req.query.endDate
 
-            res.json(await this.productService.search(user.id, page, limit, search, filter, startDate, endDate))
+            res.json(await this.productService.search(user.id, page, limit, search, status, name, type, startDate, endDate))
         } catch (error) {
             console.log(error);
             next(new HttpExeption(error.status, error.message))
