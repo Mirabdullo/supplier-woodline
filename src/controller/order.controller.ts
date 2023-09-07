@@ -78,6 +78,18 @@ class OrderController {
         }
     };
 
+    public CHANGE_STATUS = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id: string = req.params.id;
+            const status: string | any = req.query.status
+
+            res.json(await this.orderService.changeStatus(id, status));
+        } catch (error) {
+            console.log(error);
+            next(new HttpExeption(error.status, error.message))
+        }
+    }
+
     public CHECK_ID = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const id = req.params.id;

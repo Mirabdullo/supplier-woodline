@@ -135,6 +135,40 @@ class OrderService {
         return "Product activated"
     }
 
+    public async changeStatus(id: string, status: string) {
+        const product = await this.OrderModel.findOne({
+            where: { id: id }
+        })
+
+        if (!product) {
+            throw new HttpExeption(404, "Product not found")
+        } 
+
+
+        if (status === "ACTIVE" && product.status === "ACCEPTED") {
+            await this.OrderModel.update({
+                status: "ACTIVE"
+            }, {where: {id: id}})
+        } else if (status === "DELIVERED" && product.status === "ACTIVE") {
+            await this.OrderModel.update({
+                status: "DELIVERED"
+            }, {where: {id: id}})
+        } else if (status === "REJECTED" && product.status === "NEW") {
+            await this.OrderModel.update({
+                status: "REJECTED"
+            }, { where: { id: id } })
+        } else if (status === "ACCEPTED" && (product.status === "NEW" || product.status === "REJECTED")) {
+            await this.OrderModel.update({
+                status: "ACCEPTED"
+            }, { where: { id: id } })
+        } else {
+            throw new HttpExeption(403, "Invalid status")
+        }
+
+        return await this.OrderModel.findByPk(id)
+
+    }
+
 
     public async checkId(id: string) {
         return await this.OrderModel.findOne({ where: { order_id: id } })

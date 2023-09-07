@@ -1,5 +1,5 @@
 paths:
-    /order/get-id}:
+    /order/get-id:
         get:
             summary: Get order by id yo'q bo'lsa null keladi
             tags:
@@ -36,6 +36,31 @@ paths:
                     schema:
                         type: object
                         $ref: "#/definitions/Order"
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
+        
+        put:
+            summary: Change order status
+            tags:
+                - Order
+            security:
+                - BearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  description: Order id'
+                  required: true
+                  type: string
+                - name: status
+                  description: Order status
+                  required: true
+                  type: string
+            responses:
+                "200":
+                    description: Product updated
                 "401":
                     description: Invalid token
                     schema:
