@@ -11,7 +11,7 @@ class ModelService {
         
         return await this.Models.findAll({
             where: { company_id: user.comp_id },
-            attributes: ["name", "code", "price", "sale"],
+            attributes: ["id", "name", "code", "price", "sale"],
             include: {
                 model: FurnitureType,
                 attributes: ["id", "name"]
