@@ -144,7 +144,8 @@ class OrderService {
             throw new HttpExeption(404, "Product not found")
         } 
 
-
+        console.log(product.dataValues);
+        console.log(status);
         if (status === "ACTIVE" && product.status === "CREATED") {
             await this.OrderModel.update({
                 status: "ACTIVE"
