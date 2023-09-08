@@ -12,7 +12,6 @@ const producer = async (req: Request, res: Response, next: NextFunction) => {
         }
         const decode = verifyJWT(token.split(" ")[1])
 
-        console.log(decode);
         if (!decode) {
             return next(new HttpExeption(401, "Invalid token"))
         }
@@ -43,7 +42,6 @@ const storekeeper = async (req: Request, res: Response, next: NextFunction) => {
         }
         const decode = verifyJWT(token.split(" ")[1])
 
-        console.log(decode);
 
         if (!decode) {
             return next(new HttpExeption(401, "Invalid token"))
@@ -78,7 +76,6 @@ const middleware = async (req: Request, res: Response, next: NextFunction) => {
         }
         const decode = verifyJWT(token.split(" ")[1])
 
-        console.log(decode);
 
         if (!decode) {
             return next(new HttpExeption(401, "Invalid token"))

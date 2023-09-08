@@ -157,7 +157,7 @@ class OrderService {
             await this.OrderModel.update({
                 status: "REJECTED"
             }, { where: { id: id } })
-        } else if (status === "ACCEPTED" && (product.status === "NEW" || product.status === "REJECTED")) {
+        } else if (status === "ACCEPTED" && (product.status === "NEW" || product.status === "REJECTED" || product.status === "new")) {
             await this.OrderModel.update({
                 status: "ACCEPTED"
             }, { where: { id: id } })
