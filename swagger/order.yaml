@@ -51,12 +51,10 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: Order id'
-                  required: true
+                  description: Order id
                   type: string
                 - name: status
                   description: Order status
-                  required: true
                   type: string
                   enum:
                       - NEW
