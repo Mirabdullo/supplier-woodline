@@ -12,7 +12,7 @@ import errorMiddleware from "./middleware/errorMiddleware"
 
 class App {
     public app: express.Application;
-    public port: number = 3322;
+    public port: number = 3321;
     public db: Database
     constructor(routes: Routes[]) {
         this.app = express()

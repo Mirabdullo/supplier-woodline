@@ -76,7 +76,6 @@ const middleware = async (req: Request, res: Response, next: NextFunction) => {
         }
         const decode = verifyJWT(token.split(" ")[1])
 
-
         if (!decode) {
             return next(new HttpExeption(401, "Invalid token"))
         }

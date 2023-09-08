@@ -54,6 +54,7 @@ paths:
                   description: Order id
                   type: string
                 - name: status
+                  in: query
                   description: Order status
                   type: string
                   enum:
