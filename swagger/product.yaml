@@ -86,15 +86,12 @@ paths:
                   type: string
                 - name: status
                   in: query
-                  description: Product status
                   required: false
-                  type: string
                   enum:
                       - NEW
                       - ACCEPTED
                       - ACTIVE
                       - REJECTED
-                  default: ACTIVE
                 - name: name
                   in: query
                   description: Product model name
@@ -102,35 +99,30 @@ paths:
                   type: string
                 - name: type
                   in: query
-                  description: Product cathegory
                   required: false
-                  type: string
                   enum:
                       - склад
                       - заказ
-                  default: склад
                 - name: startDate
                   in: query
-                  description: Agar endate kiritilmasa startDatedan hozirga vaqt oraligida create bolgan Productlar
                   required: false
                   type: string
                   format: 'yyyy-MM-dd'
                 - name: endDate
                   in: query
-                  description: Agar startDate kiritilmasa endatedan boshlab 30 kun avvalgi vaqt oraligida create bolgan Productlar
                   required: false
                   type: string
                   format: 'yyyy-MM-dd'
                 - name: page
                   in: query
-                  description: Page raqami default 1ni oladi
                   required: false
                   type: number
+                  default: 1
                 - name: limit
                   in: query
-                  description: Limit soni default 10ni oladi
                   required: false
-                  type: number
+                  type: number'
+                  default: 10
             responses:
                 "200":
                     description: OK

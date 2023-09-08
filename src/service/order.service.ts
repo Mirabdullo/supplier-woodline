@@ -145,11 +145,11 @@ class OrderService {
         } 
 
 
-        if (status === "ACTIVE" && product.status === "ACCEPTED") {
+        if (status === "ACTIVE" && product.status === "CREATED") {
             await this.OrderModel.update({
                 status: "ACTIVE"
             }, {where: {id: id}})
-        } else if (status === "DELIVERED" && product.status === "ACTIVE") {
+        } else if (status === "DELIVERED" && product.status === "SOLD_AND_CHECKED") {
             await this.OrderModel.update({
                 status: "DELIVERED"
             }, {where: {id: id}})
@@ -161,6 +161,18 @@ class OrderService {
             await this.OrderModel.update({
                 status: "ACCEPTED"
             }, { where: { id: id } })
+        } else if (status === "SOLD_AND_CHECKED") {
+            if (product.cathegory === "заказ" && product.status === "ACCEPTED") { 
+                await this.OrderModel.update({
+                    status: "SOLD_AND_CHECKED",
+                }, { where: { id: id } })
+            } else if (product.cathegory === "продажa со склада" && product.status === "SOLD") {
+                await this.OrderModel.update({
+                    status: "SOLD_AND_CHECKED",
+                }, { where: { id: id } })
+            } else {
+                throw new HttpExeption(400, "Product status must be ACCEPTED OR SOLD")
+            }
         } else {
             throw new HttpExeption(403, "Invalid status")
         }

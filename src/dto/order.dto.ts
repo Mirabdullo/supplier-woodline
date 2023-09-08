@@ -4,11 +4,10 @@ export class createOrderDto {
     @IsString()
     @IsNotEmpty()
     order_id: string;
-
-    @IsString()
-    @IsNotEmpty()
-    cathegory: string;
-
+    
+    @IsUUID()
+    model_id: string;
+    
     @IsString()
     @IsNotEmpty()
     tissue: string;
@@ -17,8 +16,6 @@ export class createOrderDto {
     @IsNotEmpty()
     title: string;
 
-    @IsUUID()
-    model_id: string;
 
     @IsNumber()
     qty: number;

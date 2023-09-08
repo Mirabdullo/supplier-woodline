@@ -196,7 +196,7 @@ class ProductService {
 
     public async transferProduct(id: string, warehouseId: string) {
         const product = await this.ProductModel.findOne({
-            where: { order_id: id },
+            where: { order_id: id, is_active: true },
         });
         if (!product) {
             throw new HttpExeption(404, "Product not found");
@@ -210,6 +210,7 @@ class ProductService {
 
         await this.Order.update(
             {
+                cathegory: "продажa с витрины",
                 status: "TRANSFERED",
             },
             { where: { id: id } }
@@ -240,7 +241,11 @@ class ProductService {
             throw new HttpExeption(404, "Invalid model");
         }
 
-        const order = await this.Order.create(data);
+        const order = await this.Order.create({
+            status: "CREATED",
+            cathegory: "продажa со склада",
+            ...data
+        });
 
         return await this.ProductModel.create({
             warehouse_id: warehouse.id,
