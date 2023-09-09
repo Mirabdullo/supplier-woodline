@@ -171,7 +171,7 @@ class ProductService {
         } else {
             dateOptions
         }
-
+        console.log(optionStatus);
        
         const { count, rows: products } = await Order.findAndCountAll({
             where: {
