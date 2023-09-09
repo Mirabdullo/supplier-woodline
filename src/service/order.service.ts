@@ -150,7 +150,7 @@ class OrderService {
             await this.OrderModel.update({
                 status: "ACTIVE"
             }, {where: {id: id}})
-        } else if (status === "DELIVERED" && product.status === "SOLD_AND_CHECKED") {
+        } else if (status === "DELIVERED" && (product.status === "SOLD_AND_CHECKED" || product.status === "ACCEPTED")) {
             await this.OrderModel.update({
                 status: "DELIVERED"
             }, {where: {id: id}})
