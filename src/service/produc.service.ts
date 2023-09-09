@@ -126,6 +126,14 @@ class ProductService {
                     optionStatus = {
                         status: {[Op.in]: ["DELIVERED", "TRANSFERED"]}
                     }
+                } else if (status === "NEW") {
+                    optionStatus = {
+                        status: {[Op.in]: ["NEW", "CREATED"]}
+                    }
+                } else if (status === "SOLD") {
+                    optionStatus = {
+                        status: {[Op.in]: ["SOLD", "SOLD_AND_CHECKED"]}
+                    }
                 } else {
                     optionStatus = {
                         status: status
