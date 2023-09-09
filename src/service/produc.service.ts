@@ -95,7 +95,7 @@ class ProductService {
 
     public async search(id: string, page: number, limit: number, search?: string, status?: string, name?:string, type?:string, startDate?: Date, endDate?: Date) {
         const user = await this.User.findByPk(id);
-
+        console.log(status);
         const offset = (page - 1) * limit;
         let options = {};
         let optionStatus = {}
