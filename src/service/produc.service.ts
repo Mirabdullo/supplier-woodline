@@ -95,7 +95,7 @@ class ProductService {
 
     public async search(id: string, page: number, limit: number, search?: string, status?: string, name?:string, type?:string, startDate?: Date, endDate?: Date) {
         const user = await this.User.findByPk(id);
-        console.log(status);
+
         const offset = (page - 1) * limit;
         let options = {};
         let optionStatus = {}
@@ -119,7 +119,7 @@ class ProductService {
                 cathegory: type === "склад" ? "продажa со склада" : "заказ"
             }
         }
-        let statusArray = ["ACCEPTED", "REJECTED", "ACTIVE", "NEW", "DELIVERED"]
+        let statusArray = ["ACCEPTED", "REJECTED", "ACTIVE", "NEW", "DELIVERED", "SOLD"]
         if (status) {
             if (statusArray.includes(status)) {
                 if (status === "DELIVERED") {
@@ -171,7 +171,6 @@ class ProductService {
         } else {
             dateOptions
         }
-        console.log(optionStatus);
        
         const { count, rows: products } = await Order.findAndCountAll({
             where: {
