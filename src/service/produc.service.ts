@@ -119,11 +119,17 @@ class ProductService {
                 cathegory: type === "склад" ? "продажa со склада" : "заказ"
             }
         }
-        let statusArray = ["ACCEPTED", "REJECTED", "ACTIVE", "NEW"]
+        let statusArray = ["ACCEPTED", "REJECTED", "ACTIVE", "NEW", "DELIVERED"]
         if (status) {
             if (statusArray.includes(status)) {
-                optionStatus = {
-                    status: status
+                if (status === "DELIVERED") {
+                    optionStatus = {
+                        status: {[Op.in]: ["DELIVERED", "TRANSFERED"]}
+                    }
+                } else {
+                    optionStatus = {
+                        status: status
+                    }
                 }
             }
         }
