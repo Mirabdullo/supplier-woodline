@@ -2,7 +2,7 @@
   "name": "supplier_woodline",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server.ts",
   "scripts": {
     "prebuild": "rimraf ./dist",
     "dev": "npx nodemon",
