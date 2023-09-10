@@ -93,7 +93,7 @@ class ProductService {
         });
     }
 
-    public async search(id: string, page: number, limit: number, search?: string, status?: string, name?:string, type?:string, startDate?: Date, endDate?: Date) {
+    public async search(id: string, page: number, limit: number, search?: string, status?: string, name?:string, type?:string, startDate?: Date, endDate?: Date, order?: string) {
         const user = await this.User.findByPk(id);
 
         const offset = (page - 1) * limit;
@@ -102,6 +102,12 @@ class ProductService {
         let optionName = {}
         let optionType = {}
 
+        let orderBy: string
+        if (order && (order === "ASC" || order === "DESC")) {
+            orderBy = order
+        } else {
+            orderBy = "ASC"
+        }
         let dateOptions: any = {}
 
         if (search) {
@@ -201,7 +207,7 @@ class ProductService {
             ],
             offset,
             limit,
-            order: [["createdAt", "ASC"]],
+            order: [["deal", "delivery_date", orderBy]],
         });
 
         return { totalAmount: count, products };

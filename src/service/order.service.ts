@@ -154,14 +154,20 @@ class OrderService {
             await this.OrderModel.update({
                 status: "DELIVERED"
             }, {where: {id: id}})
+        } else if (status === "REJECTED" && product.status === "REJECTED") {
+            throw new HttpExeption(403, "already rejected")
         } else if (status === "REJECTED" && product.status === "NEW") {
             await this.OrderModel.update({
                 status: "REJECTED"
             }, { where: { id: id } })
+        } else if (status === "ACCEPTED" && product.status === "ACCEPTED") {
+            throw new HttpExeption(403, "already accepted")
         } else if (status === "ACCEPTED" && (product.status === "NEW" || product.status === "REJECTED" || product.status === "new")) {
             await this.OrderModel.update({
                 status: "ACCEPTED"
             }, { where: { id: id } })
+        } else if (status === "SOLD_AND_CHECKED" && product.status === "SOLD_AND_CHECKED") {
+            throw new HttpExeption(403, "already SOLD_AND_CHECKED")
         } else if (status === "SOLD_AND_CHECKED") {
             if (product.cathegory === "заказ" && product.status === "ACCEPTED") { 
                 await this.OrderModel.update({

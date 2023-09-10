@@ -41,7 +41,7 @@ paths:
                     schema:
                         type: object
                         $ref: "#/definitions/WrongToken"
-        
+
         put:
             summary: Change order status
             tags:
@@ -62,9 +62,17 @@ paths:
                       - ACCEPTED
                       - ACTIVE
                       - REJECTED
+                      - DELIVERED
+                      - SOLD_AND_CHECKED
             responses:
                 "200":
                     description: Product updated
+                "403":
+                    description: Forbidden - Possible reasons
+                        - already accepted
+                        - already rejected
+                        - already SOLD_AND_CHECKED
+                        - invali status
                 "401":
                     description: Invalid token
                     schema:
@@ -189,3 +197,5 @@ definitions:
                 type: string
             model_id:
                 type: string
+
+ 

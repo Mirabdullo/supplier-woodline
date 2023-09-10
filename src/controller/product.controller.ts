@@ -56,7 +56,9 @@ class ProductController {
             const startDate: Date | any = req.query.startDate
             const endDate: Date | any = req.query.endDate
 
-            res.json(await this.productService.search(user.id, page, limit, search, status, name, type, startDate, endDate))
+            const orderBy: string | any = req.query.orderBy
+
+            res.json(await this.productService.search(user.id, page, limit, search, status, name, type, startDate, endDate, orderBy));
         } catch (error) {
             console.log(error);
             next(new HttpExeption(error.status, error.message))

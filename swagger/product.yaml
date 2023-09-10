@@ -76,6 +76,12 @@ paths:
                   required: false
                   type: number'
                   default: 10
+                - name: orderBy
+                  in: query
+                  type: string
+                  enum:
+                      - ASC
+                      - DESC
             responses:
                 "200":
                     description: OK
