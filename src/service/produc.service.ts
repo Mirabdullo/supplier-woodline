@@ -136,9 +136,9 @@ class ProductService {
                     optionStatus = {
                         status: {[Op.in]: ["ACCEPTED", "CREATED"]}
                     }
-                } else if (status === "SOLD") {
+                } else if (status === "ACTIVE") {
                     optionStatus = {
-                        status: {[Op.in]: ["SOLD", "SOLD_AND_CHECKED"]}
+                        status: {[Op.in]: ["ACTIVE", "SOLD_AND_CHECKED"]}
                     }
                 } else {
                     optionStatus = {
