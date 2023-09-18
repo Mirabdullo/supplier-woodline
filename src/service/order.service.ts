@@ -194,6 +194,7 @@ class OrderService {
                     name: company.name + " склад",
                     company_id: company.id,
                     admin: user.id,
+                    type: "b2b склад"
                 });
             }
 
