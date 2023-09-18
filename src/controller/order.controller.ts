@@ -105,7 +105,6 @@ class OrderController {
 
     public GET_ID = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log("object");
             res.json(await this.orderService.getId());
         } catch (error) {
             console.log(error);
