@@ -81,6 +81,7 @@ class ProductController {
         try {
             const token = req.headers.authorization.split(" ")[1]
             const user = verifyJWT(token)
+            
 
             const data: createOrderDto = req.body
 

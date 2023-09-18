@@ -8,7 +8,7 @@ import { Product } from "../model/product.model";
 import { Warehouse } from "../model/warehouse.model";
 import { User } from "../model/user.model";
 import { createOrderDto } from "../dto/order.dto";
-import { Op } from "sequelize";
+import { Op, where } from "sequelize";
 import { Deals } from "../model/deal.model";
 
 class ProductService {
@@ -17,6 +17,7 @@ class ProductService {
     private User: typeof User = User;
     private Models: typeof Models = Models;
     private Order: typeof Order = Order;
+    private Company: typeof Company = Company;
 
     public async getNewProduct(id: string, page: number, limit: number) {
         const user = await this.User.findByPk(id);
@@ -93,22 +94,33 @@ class ProductService {
         });
     }
 
-    public async search(id: string, page: number, limit: number, search?: string, status?: string, name?:string, type?:string, startDate?: Date, endDate?: Date, order?: string) {
+    public async search(
+        id: string,
+        page: number,
+        limit: number,
+        search?: string,
+        status?: string,
+        name?: string,
+        type?: string,
+        startDate?: Date,
+        endDate?: Date,
+        order?: string
+    ) {
         const user = await this.User.findByPk(id);
 
         const offset = (page - 1) * limit;
         let options = {};
-        let optionStatus = {}
-        let optionName = {}
-        let optionType = {}
+        let optionStatus = {};
+        let optionName = {};
+        let optionType = {};
 
-        let orderBy: string
+        let orderBy: string;
         if (order && (order === "ASC" || order === "DESC")) {
-            orderBy = order
+            orderBy = order;
         } else {
-            orderBy = "ASC"
+            orderBy = "ASC";
         }
-        let dateOptions: any = {}
+        let dateOptions: any = {};
 
         if (search) {
             options = {
@@ -122,66 +134,66 @@ class ProductService {
 
         if (type) {
             optionType = {
-                cathegory: type === "склад" ? "продажa со склада" : "заказ"
-            }
+                cathegory: type === "склад" ? "продажa со склада" : "заказ",
+            };
         }
-        let statusArray = ["ACCEPTED", "REJECTED", "ACTIVE", "NEW", "DELIVERED", "SOLD"]
+        let statusArray = ["ACCEPTED", "REJECTED", "ACTIVE", "NEW", "DELIVERED", "SOLD"];
         if (status) {
             if (statusArray.includes(status)) {
                 if (status === "DELIVERED") {
                     optionStatus = {
-                        status: {[Op.in]: ["DELIVERED", "TRANSFERED"]}
-                    }
+                        status: { [Op.in]: ["DELIVERED", "TRANSFERED"] },
+                    };
                 } else if (status === "ACCEPTED") {
                     optionStatus = {
-                        status: {[Op.in]: ["ACCEPTED", "CREATED"]}
-                    }
+                        status: { [Op.in]: ["ACCEPTED", "CREATED"] },
+                    };
                 } else if (status === "ACTIVE") {
                     optionStatus = {
-                        status: {[Op.in]: ["ACTIVE", "SOLD_AND_CHECKED"]}
-                    }
+                        status: { [Op.in]: ["ACTIVE", "SOLD_AND_CHECKED"] },
+                    };
                 } else {
                     optionStatus = {
-                        status: status
-                    }
+                        status: status,
+                    };
                 }
             }
         }
 
         if (name) {
             optionName = {
-                "$model.name$": name
-            }
+                "$model.name$": name,
+            };
         }
-        
-        let dateO: any = {}
+
+        let dateO: any = {};
         if (startDate && !endDate) {
-            dateOptions.startDate = new Date(startDate)
-            dateOptions.endDate = new Date()
+            dateOptions.startDate = new Date(startDate);
+            dateOptions.endDate = new Date();
             dateO.createdAt = {
-                [Op.between]: [new Date(startDate), new Date()]
-            }
-        } else if (startDate && endDate) { 
-            dateOptions.startDate = new Date(startDate)
-            dateOptions.endDate = new Date(endDate)
+                [Op.between]: [new Date(startDate), new Date()],
+            };
+        } else if (startDate && endDate) {
+            dateOptions.startDate = new Date(startDate);
+            dateOptions.endDate = new Date(endDate);
             dateO.createdAt = {
-                [Op.between]: [new Date(startDate), new Date(endDate)]
-            }
+                [Op.between]: [new Date(startDate), new Date(endDate)],
+            };
         } else if (!startDate && endDate) {
-            let date = new Date(endDate)
-            dateOptions.startDate = new Date(date.setDate(date.getDate() - 30))
-            dateOptions.endDate = new Date(endDate)
+            let date = new Date(endDate);
+            dateOptions.startDate = new Date(date.setDate(date.getDate() - 30));
+            dateOptions.endDate = new Date(endDate);
             dateO.createdAt = {
-                [Op.between]: [new Date(date.setDate(date.getDate() - 30)), new Date(endDate)]
-            }
+                [Op.between]: [new Date(date.setDate(date.getDate() - 30)), new Date(endDate)],
+            };
         } else {
-            dateOptions
+            dateOptions;
         }
-       
+
         const { count, rows: products } = await Order.findAndCountAll({
             where: {
                 ...options,
-                ...optionStatus, 
+                ...optionStatus,
                 ...optionName,
                 ...optionType,
                 ...dateO,
@@ -248,9 +260,18 @@ class ProductService {
 
     public async postProduct(id: string, data: createOrderDto) {
         const user = await this.User.findByPk(id);
-        const warehouse = await this.Warehouse.findOne({ where: { company_id: user.comp_id } });
+        let warehouse = await this.Warehouse.findOne({ where: { company_id: user.comp_id } });
         if (!warehouse) {
-            throw new HttpExeption(404, "Warehouse not found");
+            const company = await this.Company.findOne({ where: { id: user.comp_id } });
+            if (!company) {
+                throw new HttpExeption(404, "Company not found");
+            }
+            console.log("create warehouse");
+            warehouse = await this.Warehouse.create({
+                name: company.name + " склад",
+                company_id: company.id,
+                admin: user.id,
+            });
         }
 
         const model = await this.Models.findAll({ where: { company_id: user.comp_id } });
@@ -263,7 +284,7 @@ class ProductService {
         const order = await this.Order.create({
             status: "CREATED",
             cathegory: "продажa со склада",
-            ...data
+            ...data,
         });
 
         return await this.ProductModel.create({
