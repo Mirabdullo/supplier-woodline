@@ -69,26 +69,6 @@ export class ExcelService {
             { header: "продавец", key: "seller", width: 16 },
         ];
 
-
-
-        sheet.eachRow((row, rowNumber) => {
-            row.eachCell((cell, cellNumber) => {
-                if (rowNumber === 1) {
-                    row.height = 27;
-                    cell.font = { bold: true, color: { argb: "#000" }, size: 14 };
-                    cell.fill = {
-                        type: "pattern",
-                        pattern: "solid",
-                        bgColor: { argb: "#34ea00" },
-                    };
-                    cell.alignment = { horizontal: "center", vertical: "middle" };
-                } else {
-                    row.height = 20;
-                    cell.alignment = { wrapText: true, vertical: "middle", horizontal: "center" };
-                }
-            });
-        });
-
         sheet.views = [
             {
                 state: "frozen",
@@ -129,6 +109,24 @@ export class ExcelService {
         sheet.getColumn("date").alignment = { vertical: "middle", horizontal: "center" };
         sheet.getColumn("artikul").alignment = { vertical: "middle", horizontal: "center" };
         sheet.getColumn("title").alignment = { wrapText: true, vertical: "middle", horizontal: "left" };
+
+        sheet.eachRow((row, rowNumber) => {
+            row.eachCell((cell, cellNumber) => {
+                if (rowNumber === 1) {
+                    row.height = 27;
+                    cell.font = { bold: true, color: { argb: "#000" }, size: 14 };
+                    cell.fill = {
+                        type: "pattern",
+                        pattern: "solid",
+                        bgColor: { argb: "#34ea00" },
+                    };
+                    cell.alignment = { horizontal: "center", vertical: "middle" };
+                } else {
+                    row.height = 20;
+                    cell.alignment = { wrapText: true, vertical: "middle", horizontal: "center" };
+                }
+            });
+        });
 
         const buffer = await workbook.xlsx.writeBuffer();
 
