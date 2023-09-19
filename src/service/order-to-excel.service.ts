@@ -111,14 +111,14 @@ export class ExcelService {
         sheet.getColumn("title").alignment = { wrapText: true, vertical: "middle", horizontal: "left" };
 
         sheet.eachRow((row, rowNumber) => {
-            row.eachCell((cell, cellNumber) => {
+            row.eachCell((cell: ExcelJs.Cell, cellNumber) => {
                 if (rowNumber === 1) {
                     row.height = 27;
                     cell.font = { bold: true, color: { argb: "#000" }, size: 14 };
                     cell.fill = {
                         type: "pattern",
                         pattern: "solid",
-                        bgColor: { argb: "#34ea00" },
+                        // bgColor: { argb: "#34ea00" },
                     };
                     cell.alignment = { horizontal: "center", vertical: "middle" };
                 } else {
