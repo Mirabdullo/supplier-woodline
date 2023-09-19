@@ -2,6 +2,36 @@ import { NextFunction, Request, Response } from "express";
 import { HttpExeption } from "../httpExeption/httpExeption";
 import { verifyJWT } from "../service/jwt.service";
 import { User } from "../model/user.model";
+import { DecodedToken, RequestWithUser } from "../interface/request.interface";
+
+// export const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+//     try {
+//         console.log(req.url);
+//         if (["/user/login"].includes(req.url)) {
+//             return next();
+//         }
+//         const authorization = req.headers.authorization;
+//         if (!authorization) {
+//             return next(new HttpExeption(401, "Authorization not provided"));
+//         }
+//         console.log(authorization);
+//         const token = authorization.split(" ")[1];
+//         if (!token) {
+//             return next(new HttpExeption(401, "Token not provided"));
+//         }
+//         const userData = await decodeToken(token);
+//         if (!userData.id) {
+//             return next(new HttpExeption(401, "No ID in User"));
+//         }
+//         console.log(userData, "data");
+//         req.user = userData;
+//         return next();
+//     } catch (error) {
+//         console.log(error?.message, "In auth");
+//         return next(new HttpExeption(401, error?.message || "Unathorized"));
+//     }
+// };
+
 
 
 const producer = async (req: Request, res: Response, next: NextFunction) => {

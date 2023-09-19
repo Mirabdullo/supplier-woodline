@@ -19,7 +19,7 @@ class App {
 
         this.initializeSwagger();
         this.connectionToDatabase()
-        // this.initializeMiddleware()
+        this.initializeMiddleware()
         this.initializeRoutes(routes)
         this.initializeErrorHandler()
     }
