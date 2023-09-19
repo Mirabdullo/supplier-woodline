@@ -75,15 +75,13 @@ export class ExcelService {
             row.eachCell((cell, cellNumber) => {
                 if (rowNumber === 1) {
                     row.height = 27;
-                    cell.font = { bold: true, color: { argb: "#00000" }, size: 14 };
+                    cell.font = { bold: true, color: { argb: "#000" }, size: 14 };
                     cell.fill = {
                         type: "pattern",
                         pattern: "solid",
                         bgColor: { argb: "#34ea00" },
                     };
                     cell.alignment = { horizontal: "center", vertical: "middle" };
-                    cell.font.color = { argb: "#FFFFFF" };
-
                 } else {
                     row.height = 20;
                     cell.alignment = { wrapText: true, vertical: "middle", horizontal: "center" };
