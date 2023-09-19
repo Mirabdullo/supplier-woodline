@@ -82,6 +82,8 @@ export class ExcelService {
                         bgColor: { argb: "#000000" },
                     };
                     cell.alignment = { horizontal: "center", vertical: "middle" };
+                    cell.font.color = { argb: "#FFFFFF" };
+
                 } else {
                     row.height = 20;
                     cell.alignment = { wrapText: true, vertical: "middle", horizontal: "center" };
