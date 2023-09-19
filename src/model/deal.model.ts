@@ -1,4 +1,4 @@
-import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { User } from "./user.model";
 import { IDeals } from "../interface/deals.interface";
 import { Order } from "./order.model";
@@ -34,5 +34,15 @@ export class Deals extends Model<Deals> implements IDeals {
     
     @Column({ type: DataType.UUID, allowNull: false })
     company_id: string;
+
+    @Column({ type: DataType.UUID, allowNull: false })
+    client_id: string;
+
+    @ForeignKey(() => User)
+    @Column({ type: DataType.UUID, allowNull: false })
+    seller_id: string;
+    @BelongsTo(() => User)
+    seller: User;
+
 
 }

@@ -215,6 +215,12 @@ class ProductService {
                 {
                     model: Deals,
                     attributes: ["id", "delivery_date", "rest"],
+                    include: [
+                        {
+                            model: User,
+                            attributes: ["id", "name", "phone"]
+                        }
+                    ]
                 },
             ],
             offset,

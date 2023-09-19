@@ -8,7 +8,16 @@ class OrderController {
 
     public GET = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            res.json(await this.orderService.getOrder());
+            const token = req.headers.authorization.split(" ")[1]
+            const user = verifyJWT(token)
+            console.log(user);
+
+            const endDate: any = req.query.endDate
+            const startDate: any = req.query.startDate
+
+            const page: number = +req.query.page || 1
+            const limit: number = +req.query.limit || 10
+            res.json(await this.orderService.getOrder(user.id, page, limit, endDate, startDate));
         } catch (error) {
             console.log(error);
             next(new HttpExeption(error.status, error.message));

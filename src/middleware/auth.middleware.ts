@@ -10,6 +10,7 @@ const producer = async (req: Request, res: Response, next: NextFunction) => {
         if (!token) {
             return  next(new HttpExeption(401, "Token not found"))
         }
+
         const decode = verifyJWT(token.split(" ")[1])
 
         if (!decode) {

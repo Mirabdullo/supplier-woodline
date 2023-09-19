@@ -1,4 +1,46 @@
 paths:
+    /order:
+        get:
+            summary: Get all transfer and delivered orders
+            tags:
+                - Order
+            security:
+                - BearerAuth: []
+            consumes:
+                - application/json
+            parameters:
+                - name: page
+                  in: query
+                  description: Page number
+                  type: integer
+                  default: 1
+                - name: limit
+                  in: query
+                  description: Page limit
+                  type: integer
+                  default: 10
+                - name: startDate
+                  in: query
+                  description: start date
+                  type: string
+                  format: 'yyyy-MM-dd'
+                - name: endDate
+                  in: query
+                  description: end date
+                  type: string
+                  format: 'yyyy-MM-dd'                
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: array
+                        items:
+                            $ref: "#/definitions/Order"
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"
     /order/get-id:
         get:
             summary: Get order by id yo'q bo'lsa null keladi
@@ -170,6 +212,7 @@ paths:
                     schema:
                         type: object
                         $ref: "#/definitions/WrongToken"
+    
 
 definitions:
     Order:
@@ -197,5 +240,3 @@ definitions:
                 type: string
             model_id:
                 type: string
-
- 

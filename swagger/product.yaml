@@ -1,4 +1,30 @@
 paths:
+    /excel:
+        get:
+            summary: Upload orders excel file
+            tags:
+                - Excel
+            security: 
+                - BearerAuth: []
+            parameters:
+                - name: startDate
+                  in: query
+                  required: false
+                  type: string
+                  format: 'yyyy-MM-dd'
+                - name: endDate
+                  in: query
+                  required: false
+                  type: string
+                  format: 'yyyy-MM-dd'
+            responses:
+                "200":
+                    description: File updated successfully
+                "401":
+                    description: Invalid token
+                    schema:
+                        type: object
+                        $ref: "#/definitions/WrongToken"                
     /warehouse-product:
         post:
             summary: Create new product

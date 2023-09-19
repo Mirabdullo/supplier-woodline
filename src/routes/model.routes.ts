@@ -12,7 +12,7 @@ class ModelRoutes {
     }
 
     public initializeRoutes() { 
-        this.router.get(`${this.path}`, middleware, producer, this.modelController.GET)
+        this.router.get(`${this.path}`, middleware, this.modelController.GET)
     }
 }
 

@@ -1,9 +1,13 @@
+import { Op } from "sequelize";
 import { HttpExeption } from "../httpExeption/httpExeption";
 import { Company } from "../model/company.model";
 import { Order } from "../model/order.model";
 import { Product } from "../model/product.model";
 import { User } from "../model/user.model";
 import { Warehouse } from "../model/warehouse.model";
+import { Models } from "../model/model.model";
+import { FurnitureType } from "../model/furnitureType.model";
+import { Deals } from "../model/deal.model";
 
 function makeSixDigit(number) {
     const strNumber = number.toString();
@@ -42,14 +46,59 @@ function generateId(idArray: { order_id: string }[]): string {
 }
 
 class OrderService {
-    public OrderModel: typeof Order = Order;
+    private OrderModel: typeof Order = Order;
     private ProductModel: typeof Product = Product;
     private UserModel: typeof User = User;
     private WarehouseModel: typeof Warehouse = Warehouse;
     private CompanyModel: typeof Company = Company;
+    private Models: typeof Models = Models;
+    private FurnitureType: typeof FurnitureType = FurnitureType;
+    private Deals: typeof Deals = Deals;
 
-    public async getOrder() {
-        return await this.OrderModel.findAll();
+    public async getOrder(id: string, page: number, limit: number, start?: string, end?: string) {
+        const user = await User.findByPk(id);
+        let currentDate = new Date();
+        const startDate = new Date(start || currentDate.setDate(currentDate.getMonth() - 1));
+        const endDate = new Date(end || new Date().getTime());
+
+        const offset = (page - 1) * limit
+
+        const {count, rows: orders} = await this.OrderModel.findAndCountAll({
+            where: {
+                status: { [Op.in]: ["DELIVERED", "TRANSFERED"] },
+                "$model.company_id$": user.comp_id,
+                createdAt: { [Op.between]: [startDate, endDate] },
+            },
+            attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status", "createdAt"],
+            include: [
+                {
+                    model: this.Models,
+                    attributes: ["id", "name", "price", "sale", "code"],
+                    include: [
+                        {
+                            model: this.FurnitureType,
+                            attributes: ["id", "name"],
+                        },
+                    ],
+                },
+                {
+                    model: this.Deals,
+                    attributes: ["id", "delivery_date", "rest"],
+                    include: [
+                        {
+                            model: this.UserModel,
+                            attributes: ["id", "name", "phone"],
+                        },
+                    ],
+                },
+            ],
+            offset,
+            limit,
+            order: [["createdAt", "DESC"]],
+        });
+
+
+        return {totalAmount: count, orders}
     }
 
     public async acceptProduct(userId: string, id: string) {
