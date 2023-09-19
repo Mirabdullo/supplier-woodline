@@ -118,7 +118,7 @@ export class ExcelService {
                     cell.fill = {
                         type: "pattern",
                         pattern: "solid",
-                        // bgColor: { argb: "#34ea00" },
+                        bgColor: { argb: "#34ea00" },
                     };
                     cell.alignment = { horizontal: "center", vertical: "middle" };
                 } else {
