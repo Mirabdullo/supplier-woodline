@@ -128,6 +128,17 @@ export class ExcelService {
             });
         });
 
+        const headerRow = sheet.getRow(1);
+
+        const headerStyle = {
+            font: {
+              color: { argb: 'FF00FF00' }, // Yashil rang
+            },
+        };
+        
+        headerRow.eachCell((cell) => {
+            cell.style = headerStyle;
+          });
         const buffer = await workbook.xlsx.writeBuffer();
 
         return buffer;
