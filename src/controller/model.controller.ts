@@ -2,17 +2,17 @@ import { NextFunction, Request, Response } from "express";
 import ModelService from "../service/model.service";
 import { HttpExeption } from "../httpExeption/httpExeption";
 import { verifyJWT } from "../service/jwt.service";
+import { RequestWithUser } from "../interface/request.interface";
 
 class ModelController {
     private modelService = new ModelService();
 
 
-    public GET = async (req: Request, res: Response, next: NextFunction) => {
+    public GET = async (req: RequestWithUser, res: Response, next: NextFunction) => {
         try {
-            const token = req.headers.authorization.split(" ")[1]
-            const decode = verifyJWT(token)
+            const userId = req.user.id
 
-            res.json(await this.modelService.getModel(decode.id))
+            res.json(await this.modelService.getModel(userId))
         } catch (error) {
             console.log(error);
             next(new HttpExeption(error.status, error.message));

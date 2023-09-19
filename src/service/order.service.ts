@@ -61,9 +61,9 @@ class OrderService {
         const startDate = new Date(start || currentDate.setDate(currentDate.getMonth() - 1));
         const endDate = new Date(end || new Date().getTime());
 
-        const offset = (page - 1) * limit
+        const offset = (page - 1) * limit;
 
-        const {count, rows: orders} = await this.OrderModel.findAndCountAll({
+        const { count, rows: orders } = await this.OrderModel.findAndCountAll({
             where: {
                 status: { [Op.in]: ["DELIVERED", "TRANSFERED"] },
                 "$model.company_id$": user.comp_id,
@@ -97,100 +97,7 @@ class OrderService {
             order: [["createdAt", "DESC"]],
         });
 
-
-        return {totalAmount: count, orders}
-    }
-
-    public async acceptProduct(userId: string, id: string) {
-        const user = await this.UserModel.findByPk(userId);
-        const warehouse = await this.WarehouseModel.findOne({ where: { company_id: user.comp_id } });
-
-        const product = await this.OrderModel.findOne({ where: { id: id } });
-
-        if (!product) {
-            throw new HttpExeption(404, "Product not found");
-        }
-
-        if (product.status !== "NEW" && product.status !== "REJECTED") {
-            throw new HttpExeption(403, "Product Already accepted");
-        }
-
-        await this.OrderModel.update(
-            {
-                status: "ACCEPTED",
-            },
-            { where: { id: id } }
-        );
-
-        await this.ProductModel.create({
-            order_id: id,
-            warehouse_id: warehouse.id,
-        });
-
-        return "Product accepted";
-    }
-
-    public async rejectProduct(id: string) {
-        const product = await this.OrderModel.findOne({ where: { id: id } });
-
-        if (!product) {
-            throw new HttpExeption(404, "Product not found");
-        }
-
-        if (product.status !== "NEW") {
-            throw new HttpExeption(403, "Product Already accepted or rejected");
-        }
-
-        await this.OrderModel.update(
-            {
-                status: "REJECTED",
-            },
-            { where: { id: id } }
-        );
-
-        return "Product rejected";
-    }
-
-    public async deliveredProduct(id: string) {
-        const product = await this.OrderModel.findOne({ where: { id: id } });
-
-        if (!product) {
-            throw new HttpExeption(404, "Product not found");
-        }
-
-        if (product.status !== "ACTIVE" && product.status !== "ACCEPTED") {
-            throw new HttpExeption(403, "Product not active");
-        }
-
-        await this.OrderModel.update(
-            {
-                status: "DELIVERED",
-            },
-            { where: { id: id } }
-        );
-
-        return "Product delivered";
-    }
-
-    public async activateProduct(id: string) {
-        const product = await this.OrderModel.findOne({ where: { id: id } });
-
-        if (!product) {
-            throw new HttpExeption(404, "Product not found");
-        }
-
-        if (product.status !== "ACCEPTED") {
-            throw new HttpExeption(403, "Product not accepted");
-        }
-
-        await this.OrderModel.update(
-            {
-                status: "ACTIVE",
-            },
-            { where: { id: id } }
-        );
-
-        return "Product activated";
+        return { totalAmount: count, orders };
     }
 
     public async changeStatus(id: string, status: string, userId: string) {
@@ -243,7 +150,7 @@ class OrderService {
                     name: company.name + " склад",
                     company_id: company.id,
                     admin: user.id,
-                    type: "b2b склад"
+                    type: "b2b склад",
                 });
             }
 

@@ -17,10 +17,6 @@ class OrderRoutes {
         this.router.get(`${this.path}/get-id`, middleware, this.orderController.GET_ID)
         this.router.get(`${this.path}/:id`, middleware, this.orderController.CHECK_ID)
         this.router.put(`${this.path}/:id`, middleware, this.orderController.CHANGE_STATUS)
-        this.router.put(`${this.path}/accepted/:id`, producer, this.orderController.ACCEPT)
-        this.router.put(`${this.path}/rejected/:id`, producer, this.orderController.REJECT)
-        this.router.put(`${this.path}/delivered/:id`, producer, this.orderController.DELIVERED)
-        this.router.put(`${this.path}/activated/:id`, middleware, this.orderController.ACTIVE)
     }
 }
 

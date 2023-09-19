@@ -3,14 +3,14 @@ import ProductService from "../service/produc.service";
 import { HttpExeption } from "../httpExeption/httpExeption";
 import { verifyJWT } from "../service/jwt.service";
 import { createOrderDto } from "../dto/order.dto";
+import { RequestWithUser } from "../interface/request.interface";
 
 class ProductController {
     private productService = new ProductService();
 
-    public GET_BY_STATUS = async (req: Request, res: Response, next: NextFunction) => {
+    public GET_BY_STATUS = async (req: RequestWithUser, res: Response, next: NextFunction) => {
         try {
-            const token = req.headers.authorization.split(" ")[1]
-            const user = verifyJWT(token)
+            const userId = req.user.id
 
             const status: string | any = req.query.status
 
@@ -18,18 +18,16 @@ class ProductController {
             const limit: number = +req.query.limit || 10
 
 
-            res.json(await this.productService.getProduct(user.id, status, page, limit))
+            res.json(await this.productService.getProduct(userId, status, page, limit))
         } catch (error) {
             console.log(error);
             next(new HttpExeption(error.status, error.message))
         }
     }
 
-    public ALL = async (req: Request, res: Response, next: NextFunction) => {
+    public ALL = async (req: RequestWithUser, res: Response, next: NextFunction) => {
         try {
-            const token = req.headers.authorization.split(" ")[1]
-            const user = verifyJWT(token)
-
+            const userId = req.user.id
             const search: any = req.query.search
             const status: any = req.query.status
             const name: any = req.query.name
@@ -43,7 +41,7 @@ class ProductController {
 
             const orderBy: string | any = req.query.orderBy
 
-            res.json(await this.productService.search(user.id, page, limit, search, status, name, type, startDate, endDate, orderBy));
+            res.json(await this.productService.search(userId, page, limit, search, status, name, type, startDate, endDate, orderBy));
         } catch (error) {
             console.log(error);
             next(new HttpExeption(error.status, error.message))
@@ -62,15 +60,13 @@ class ProductController {
         }
     }
 
-    public POST = async (req: Request, res: Response, next: NextFunction) => {
+    public POST = async (req: RequestWithUser, res: Response, next: NextFunction) => {
         try {
-            const token = req.headers.authorization.split(" ")[1]
-            const user = verifyJWT(token)
-            
+            const userId = req.user.id
 
             const data: createOrderDto = req.body
 
-            res.json(await this.productService.postProduct(user.id, data))
+            res.json(await this.productService.postProduct(userId, data))
         } catch (error) {
             console.log(error);
             next(new HttpExeption(error.status, error.message))

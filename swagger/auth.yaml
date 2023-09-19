@@ -38,10 +38,10 @@ definitions:
         properties:
             token:
                 type: string
-                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImY2OTRiNjY1LWM5MmMtNGQzNy1hNDNhLWQxMjNiOTAwMzlkMiIsInJvbGUiOiJQUk9EVUNFUiIsImlhdCI6MTY5NDA3NTkxMH0.AcHYvefP7hs8KEh6_P4OK2NG_nfZNRlZvop1E7Vd_m0
+                example: token
             company_id:
                 type: string
-                example: "1joMveTW7kRDxrENE4_3IErra9-2qVZasKYS2PE10Ees"
+                example: "1joMveTW7kRDxrNE4_3IErra9-2qVZasKYSE10Ees"
             role:
                 type: string
                 example: "PRODUCER"

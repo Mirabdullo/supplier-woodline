@@ -2,100 +2,35 @@ import { NextFunction, Request, Response } from "express";
 import OrderService from "../service/order.service";
 import { HttpExeption } from "../httpExeption/httpExeption";
 import { verifyJWT } from "../service/jwt.service";
+import { RequestWithUser } from "../interface/request.interface";
 
 class OrderController {
     public orderService = new OrderService();
 
-    public GET = async (req: Request, res: Response, next: NextFunction) => {
+    public GET = async (req: RequestWithUser, res: Response, next: NextFunction) => {
         try {
-            const token = req.headers.authorization.split(" ")[1]
-            const user = verifyJWT(token)
-            console.log(user);
+            const userId = req.user.id
 
             const endDate: any = req.query.endDate
             const startDate: any = req.query.startDate
 
             const page: number = +req.query.page || 1
             const limit: number = +req.query.limit || 10
-            res.json(await this.orderService.getOrder(user.id, page, limit, endDate, startDate));
+            res.json(await this.orderService.getOrder(userId, page, limit, endDate, startDate));
         } catch (error) {
             console.log(error);
             next(new HttpExeption(error.status, error.message));
         }
     };
 
-    public ACCEPT = async (req: Request, res: Response, next: NextFunction) => {
+    public CHANGE_STATUS = async (req: RequestWithUser, res: Response, next: NextFunction) => {
         try {
-            const token = req.headers.authorization.split(" ")[1];
-            const user = verifyJWT(token);
-
-            const id: string = req.params.id;
-
-            if (!id) {
-                return res.status(404).json("Id not found");
-            }
-
-            res.json(await this.orderService.acceptProduct(user.id, id));
-        } catch (error) {
-            console.log(error);
-            next(new HttpExeption(error.status, error.message));
-        }
-    };
-
-    public REJECT = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const id: string = req.params.id;
-
-            if (!id) {
-                return res.status(404).json("Id not found");
-            }
-
-            res.json(await this.orderService.rejectProduct(id));
-        } catch (error) {
-            console.log(error);
-            next(new HttpExeption(error.status, error.message));
-        }
-    };
-
-    public ACTIVE = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const id: string = req.params.id;
-
-            if (!id) {
-                return res.status(404).json("Id not found");
-            }
-
-            res.json(await this.orderService.activateProduct(id));
-        } catch (error) {
-            console.log(error);
-            next(new HttpExeption(error.status, error.message));
-        }
-    };
-
-    public DELIVERED = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const id: string = req.params.id;
-
-            if (!id) {
-                return res.status(404).json("Id not found");
-            }
-
-            res.json(await this.orderService.deliveredProduct(id));
-        } catch (error) {
-            console.log(error);
-            next(new HttpExeption(error.status, error.message));
-        }
-    };
-
-    public CHANGE_STATUS = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const token = req.headers.authorization.split(" ")[1]
-            const user = verifyJWT(token)
+            const userId = req.user.id
          
             const id: string = req.params.id;
             const status: string | any = req.query.status
 
-            res.json(await this.orderService.changeStatus(id, status, user.id));
+            res.json(await this.orderService.changeStatus(id, status, userId));
         } catch (error) {
             console.log(error);
             next(new HttpExeption(error.status, error.message))

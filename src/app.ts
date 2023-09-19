@@ -7,6 +7,7 @@ import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import errorMiddleware from "./middleware/errorMiddleware"
+import { authMiddleware } from "./middleware/auth.middleware"
 
 
 
@@ -42,6 +43,7 @@ class App {
         this.app.use(express.json())
         this.app.use(bodyParser.urlencoded({ extended: true }))
         this.app.use(bodyParser.json())
+        this.app.use(authMiddleware)
     }
 
 
