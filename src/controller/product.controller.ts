@@ -7,21 +7,6 @@ import { createOrderDto } from "../dto/order.dto";
 class ProductController {
     private productService = new ProductService();
 
-    public GET = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const token = req.headers.authorization.split(" ")[1]
-            const user = verifyJWT(token)
-
-            const page: number = +req.query.page || 1;
-            const limit: number = +req.query.limit || 10
-
-            res.json(await this.productService.getNewProduct(user.id, page, limit))
-        } catch (error) {
-            console.log(error);
-            next(new HttpExeption(error.status, error.message))
-        }
-    }
-
     public GET_BY_STATUS = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const token = req.headers.authorization.split(" ")[1]

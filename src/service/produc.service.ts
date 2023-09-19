@@ -19,40 +19,6 @@ class ProductService {
     private Order: typeof Order = Order;
     private Company: typeof Company = Company;
 
-    public async getNewProduct(id: string, page: number, limit: number) {
-        const user = await this.User.findByPk(id);
-
-        const offset = (page - 1) * limit;
-
-        return await Order.findAll({
-            where: {
-                status: "NEW",
-                "$model.company_id$": user.comp_id,
-                is_active: true,
-            },
-            attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status"],
-            include: [
-                {
-                    model: Models,
-                    attributes: ["name", "price", "sale", "code"],
-                    include: [
-                        {
-                            model: FurnitureType,
-                            attributes: ["name"],
-                        },
-                    ],
-                },
-                {
-                    model: Deals,
-                    attributes: ["id", "delivery_date", "rest"],
-                },
-            ],
-            offset,
-            limit,
-            order: [["createdAt", "ASC"]],
-        });
-    }
-
     public async getProduct(id: string, status: string, page: number, limit: number) {
         const user = await this.User.findByPk(id);
 

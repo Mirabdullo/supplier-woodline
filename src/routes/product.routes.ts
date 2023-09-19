@@ -13,7 +13,6 @@ class ProductRoutes {
     }
 
     public initializeRoutes() { 
-        this.router.get(`${this.path}`, producer, this.productController.GET)
         this.router.get(`${this.path}`, producer, this.productController.ALL)
         this.router.get(`${this.path}/by-status`,middleware, this.productController.GET_BY_STATUS)
         this.router.put(`${this.path}/transfer/:id`, producer, this.productController.TRANSFER)
