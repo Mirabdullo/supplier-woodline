@@ -6,7 +6,6 @@ import { DecodedToken, RequestWithUser } from "../interface/request.interface";
 
 export const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
-        console.log(req.url);
         if (["/user/login"].includes(req.url)) {
             return next();
         }

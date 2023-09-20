@@ -64,7 +64,7 @@ export class ExcelService {
             { header: "ткань", key: "tissue", width: 22 },
             { header: "примечание", key: "title", width: 32 },
             { header: "артикул", key: "artikul", width: 14 },
-            { header: "дата отгрузки", key: "delivery_date", width: 17 },
+            { header: "дата отгрузки", key: "delivery_date", width: 22 },
             { header: "кол-во", key: "qty", width: 10 },
             { header: "продавец", key: "seller", width: 16 },
         ];
@@ -134,12 +134,12 @@ export class ExcelService {
             font: {
                 bold: true, color: { argb: "#000" }, size: 14
             },
+            alignment: { horizontal: "center", vertical: "middle" },
             fill: {
                 type: "pattern",
                 pattern: "solid",
-                bgColor: { argb: "FF00FF00" },
+                bgColor: { argb: "#34ea00" },
             },
-            alignment: { horizontal: "center", vertical: "middle" }
         };
         
         headerRow.eachCell((cell) => {
