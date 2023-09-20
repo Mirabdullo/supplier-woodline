@@ -130,6 +130,11 @@ export class ExcelService {
             });
         });
 
+        const headerRow = sheet.getRow(1);
+        headerRow.eachCell((cell) => {
+            cell.style = headerStyle as ExcelJs.Style;
+            cell.alignment = { horizontal: "center", vertical: "middle" };
+          });
 
         const buffer = await workbook.xlsx.writeBuffer();
 
