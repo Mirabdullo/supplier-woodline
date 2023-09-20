@@ -10,6 +10,7 @@ import { User } from "../model/user.model";
 import { createOrderDto } from "../dto/order.dto";
 import { Op, where } from "sequelize";
 import { Deals } from "../model/deal.model";
+import { Client } from "../model/client.model";
 
 class ProductService {
     private ProductModel: typeof Product = Product;
@@ -18,6 +19,7 @@ class ProductService {
     private Models: typeof Models = Models;
     private Order: typeof Order = Order;
     private Company: typeof Company = Company;
+    private Client: typeof Client = Client;
 
     public async getProduct(id: string, status: string, page: number, limit: number) {
         const user = await this.User.findByPk(id);
@@ -185,6 +187,10 @@ class ProductService {
                         {
                             model: User,
                             attributes: ["id", "name", "phone"]
+                        },
+                        {
+                            model: this.Client,
+                            attributes: ["name", "phone"]
                         }
                     ]
                 },

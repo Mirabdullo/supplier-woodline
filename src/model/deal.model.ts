@@ -2,6 +2,7 @@ import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize
 import { User } from "./user.model";
 import { IDeals } from "../interface/deals.interface";
 import { Order } from "./order.model";
+import { Client } from "./client.model";
 
 @Table({ timestamps: true, tableName: "deals" })
 export class Deals extends Model<Deals> implements IDeals {
@@ -35,8 +36,11 @@ export class Deals extends Model<Deals> implements IDeals {
     @Column({ type: DataType.UUID, allowNull: false })
     company_id: string;
 
+    @ForeignKey(() => Client)
     @Column({ type: DataType.UUID, allowNull: false })
     client_id: string;
+    @BelongsTo(() => Client)
+    client: Client
 
     @ForeignKey(() => User)
     @Column({ type: DataType.UUID, allowNull: false })

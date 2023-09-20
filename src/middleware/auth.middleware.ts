@@ -22,7 +22,7 @@ export const authMiddleware = async (req: RequestWithUser, res: Response, next: 
         if (!userData.id) {
             return next(new HttpExeption(401, "No ID in User"));
         }
-        console.log(userData, "data");
+
         req.user = userData;
         return next();
     } catch (error) {
