@@ -64,7 +64,7 @@ export class ExcelService {
             { header: "ткань", key: "tissue", width: 22 },
             { header: "примечание", key: "title", width: 32 },
             { header: "артикул", key: "artikul", width: 14 },
-            { header: "дата отгрузки", key: "delivery_date", width: 17 },
+            { header: "дата отгрузки", key: "delivery_date", width: 22 },
             { header: "кол-во", key: "qty", width: 10 },
             { header: "продавец", key: "seller", width: 16 },
         ];
@@ -110,16 +110,23 @@ export class ExcelService {
         sheet.getColumn("artikul").alignment = { vertical: "middle", horizontal: "center" };
         sheet.getColumn("title").alignment = { wrapText: true, vertical: "middle", horizontal: "left" };
 
+
+        const headerStyle = {
+            font: {
+                bold: true, color: { argb: "#000" }, size: 14
+            },
+            fill: {
+                type: "pattern",
+                pattern: "solid",
+                bgColor: { argb: "FF00FF00" },
+            },
+        };
+
         sheet.eachRow((row, rowNumber) => {
             row.eachCell((cell: ExcelJs.Cell, cellNumber) => {
                 if (rowNumber === 1) {
                     row.height = 27;
-                    cell.font = { bold: true, color: { argb: "#000" }, size: 14 };
-                    cell.fill = {
-                        type: "pattern",
-                        pattern: "solid",
-                        bgColor: { argb: "#34ea00" },
-                    };
+                    cell.style = headerStyle as ExcelJs.Style;
                     cell.alignment = { horizontal: "center", vertical: "middle" };
                 } else {
                     row.height = 20;
@@ -128,17 +135,7 @@ export class ExcelService {
             });
         });
 
-        const headerRow = sheet.getRow(1);
 
-        const headerStyle = {
-            font: {
-              color: { argb: 'FF00FF00' }, // Yashil rang
-            },
-        };
-        
-        headerRow.eachCell((cell) => {
-            cell.style = headerStyle;
-          });
         const buffer = await workbook.xlsx.writeBuffer();
 
         return buffer;
