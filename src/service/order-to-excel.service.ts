@@ -105,11 +105,6 @@ export class ExcelService {
             });
         });
 
-        sheet.getColumn("index").alignment = { vertical: "middle", horizontal: "left" };
-        sheet.getColumn("date").alignment = { vertical: "middle", horizontal: "center" };
-        sheet.getColumn("artikul").alignment = { vertical: "middle", horizontal: "center" };
-        sheet.getColumn("title").alignment = { wrapText: true, vertical: "middle", horizontal: "left" };
-
 
         const headerStyle = {
             font: {
