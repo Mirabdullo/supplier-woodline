@@ -135,11 +135,6 @@ export class ExcelService {
                 bold: true, color: { argb: "#000" }, size: 14
             },
             alignment: { horizontal: "center", vertical: "middle" },
-            fill: {
-                type: "pattern",
-                pattern: "solid",
-                bgColor: { argb: "#34ea00" },
-            },
         };
         
         headerRow.eachCell((cell) => {
