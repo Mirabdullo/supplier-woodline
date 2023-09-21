@@ -9,7 +9,7 @@ import { Models } from "../model/model.model";
 import { FurnitureType } from "../model/furnitureType.model";
 import { Deals } from "../model/deal.model";
 
-function makeSixDigit(number) {
+function makeSixDigit(number: any) {
     const strNumber = number.toString();
     if (strNumber.length < 6) {
         return strNumber.padStart(6, "0");

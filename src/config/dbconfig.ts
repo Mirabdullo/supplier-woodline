@@ -10,16 +10,27 @@ import { Models } from '../model/model.model';
 import { FurnitureType } from '../model/furnitureType.model';
 import { Deals } from '../model/deal.model';
 import { Client } from '../model/client.model';
+import dotenv from "dotenv"
+dotenv.config()
 
 const file: string = path.join(__dirname, "../../ca-certificate.crt");
 const serverCa = [fs.readFileSync(file, 'utf8')];
 
+
+const db: string = process.env.DB || ""
+const username: string = process.env.ADMIN || ""
+const password: string = process.env.PASSWORD || ""
+const host: string = process.env.HOST || ""
+const port: number = parseInt(process.env.PORT || "")
+
+
+
 export const dbConnection: SequelizeOptions = {
-    host: "db-postgresql-fra1-95213-do-user-12466147-0.b.db.ondigitalocean.com",
-    username: "doadmin",
-    database: "woodlinecrm",
-    port: 25060,
-    password: "AVNS_Hq7s9CF7p0HNn1ikIoZ",
+    host: host,
+    username: username,
+    database: db,
+    port: port,
+    password: password,
     dialect: "postgres", // or 'mysql', 'sqlite', 'mssql', etc.
     models: [User, Company, Product, Warehouse, Order, Models, FurnitureType, Deals, Client ],
     logging: false,
