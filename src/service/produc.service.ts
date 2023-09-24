@@ -75,7 +75,7 @@ class ProductService {
         order?: string
     ) {
         const user = await this.User.findByPk(id);
-
+        console.log(user.name, user.comp_id)
         const offset = (page - 1) * limit;
         let options = {};
         let optionStatus = {};
