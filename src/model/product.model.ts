@@ -25,8 +25,8 @@ export class Product extends Model<Product> implements IProduct {
     @BelongsTo(() => Warehouse)
     warehouse: Warehouse;
 
-    @Column({ type: DataType.BOOLEAN, defaultValue: false })
-    is_copied: boolean;
+    // @Column({ type: DataType.BOOLEAN, defaultValue: false })
+    // is_copied: boolean;
 
     @Column({ type: DataType.BOOLEAN, defaultValue: true })
     is_active: boolean;
