@@ -48,12 +48,13 @@ class ProductController {
         }
     }
 
-    public TRANSFER = async (req: Request, res: Response, next: NextFunction) => {
+    public TRANSFER = async (req: RequestWithUser, res: Response, next: NextFunction) => {
         try {
+            const userId = req.user.id
             const id: string = req.params.id
             const warehouse: string = req.body.warehouse_id
 
-            res.json(await this.productService.transferProduct(id, warehouse))
+            res.json(await this.productService.transferProduct(id, warehouse, userId))
         } catch (error) {
             console.log(error);
             next(new HttpExeption(error.status, error.message))

@@ -11,6 +11,7 @@ import { createOrderDto } from "../dto/order.dto";
 import { Op, where } from "sequelize";
 import { Deals } from "../model/deal.model";
 import { Client } from "../model/client.model";
+import { logOrderChanged } from "./order-log.service";
 
 class ProductService {
     private ProductModel: typeof Product = Product;
@@ -202,7 +203,7 @@ class ProductService {
         return { totalAmount: count, products };
     }
 
-    public async transferProduct(id: string, warehouseId: string) {
+    public async transferProduct(id: string, warehouseId: string, userId: string) {
         const product = await this.ProductModel.findOne({
             where: { order_id: id, is_active: true },
         });
@@ -223,6 +224,9 @@ class ProductService {
             },
             { where: { id: id } }
         );
+
+        await logOrderChanged(id, userId)
+
 
         product.is_active = false;
         await product.save();
@@ -264,6 +268,8 @@ class ProductService {
             cathegory: "продажa со склада",
             ...data,
         });
+
+        await logOrderChanged(order.id, user.id)
 
         return await this.ProductModel.create({
             warehouse_id: warehouse.id,

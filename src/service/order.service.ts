@@ -8,6 +8,7 @@ import { Warehouse } from "../model/warehouse.model";
 import { Models } from "../model/model.model";
 import { FurnitureType } from "../model/furnitureType.model";
 import { Deals } from "../model/deal.model";
+import { logOrderChanged } from "./order-log.service";
 
 function makeSixDigit(number: any) {
     const strNumber = number.toString();
@@ -169,14 +170,8 @@ class OrderService {
         } else if (status === "SOLD_AND_CHECKED" && product.status === "SOLD_AND_CHECKED") {
             throw new HttpExeption(403, "already SOLD_AND_CHECKED");
         } else if (status === "SOLD_AND_CHECKED") {
-            if (product.cathegory === "заказ" && product.status === "ACCEPTED") {
-                await this.OrderModel.update(
-                    {
-                        status: "SOLD_AND_CHECKED",
-                    },
-                    { where: { id: id } }
-                );
-            } else if (product.cathegory === "продажa со склада" && product.status === "SOLD") {
+            const statuses = ["ACCEPTED", "SOLD"]
+            if (statuses.includes(product.status)) {
                 await this.OrderModel.update(
                     {
                         status: "SOLD_AND_CHECKED",
@@ -190,6 +185,7 @@ class OrderService {
             throw new HttpExeption(403, "Invalid status");
         }
 
+        await logOrderChanged(id, userId)
         return await this.OrderModel.findByPk(id);
     }
 

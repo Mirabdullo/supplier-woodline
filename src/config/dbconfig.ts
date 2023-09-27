@@ -11,6 +11,7 @@ import { FurnitureType } from '../model/furnitureType.model';
 import { Deals } from '../model/deal.model';
 import { Client } from '../model/client.model';
 import dotenv from "dotenv"
+import { OrderLog } from '../model/orderLog.model';
 dotenv.config()
 
 const file: string = path.join(__dirname, "../../ca-certificate.crt");
@@ -32,7 +33,7 @@ export const dbConnection: SequelizeOptions = {
     port: port,
     password: password,
     dialect: "postgres", // or 'mysql', 'sqlite', 'mssql', etc.
-    models: [User, Company, Product, Warehouse, Order, Models, FurnitureType, Deals, Client ],
+    models: [User, Company, Product, Warehouse, Order, Models, FurnitureType, Deals, Client, OrderLog ],
     logging: false,
     dialectOptions: {
         ssl: {
