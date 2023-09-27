@@ -53,7 +53,7 @@ const producer = async (req: Request, res: Response, next: NextFunction) => {
             return next(new HttpExeption(401, "You are not allowed to access"))
         }
 
-        if (decode.role !== "PRODUCER") {
+        if (!decode.role || decode.role !== "PRODUCER") {
             return next(new HttpExeption(401, "You are not authorized to access this"))
         }
         next()
@@ -84,7 +84,7 @@ const storekeeper = async (req: Request, res: Response, next: NextFunction) => {
             return next(new HttpExeption(401, "You are not allowed to access"))
         }
 
-        if (decode.role !== "STOREKEEPER") { 
+        if (!decode.role || decode.role !== "STOREKEEPER") { 
             return next(new HttpExeption(401, "You are not allowed to access"))
         }
 
@@ -119,7 +119,7 @@ const middleware = async (req: Request, res: Response, next: NextFunction) => {
 
         let roles = ["STOREKEEPER", "PRODUCER"]
 
-        if (!roles.includes(decode.role)) { 
+        if (!decode.role || !roles.includes(decode.role)) { 
             return next(new HttpExeption(401, "You are not allowed to access"))
         }
 
