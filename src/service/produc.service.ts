@@ -168,7 +168,7 @@ class ProductService {
                 "$model.company_id$": user.comp_id,
                 is_active: true,
             },
-            attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status"],
+            attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status", "createdAt"],
             include: [
                 {
                     model: Models,
