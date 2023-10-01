@@ -1,7 +1,9 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasOne, Model, Table } from "sequelize-typescript";
 import { IOrder } from "../interface/order.interface";
 import { Models } from "./model.model";
 import { Deals } from "./deal.model";
+import { Warehouse } from "./warehouse.model";
+import { Product } from "./product.model";
 
 @Table({ timestamps: true, tableName: "orders" })
 export class Order extends Model<Order> implements IOrder {
@@ -66,4 +68,8 @@ export class Order extends Model<Order> implements IOrder {
     model_id: string;
     @BelongsTo(() => Models)
     model: Models;
+
+    @HasOne(() => Product)
+    warehouseProduct: Product;
 }
+

@@ -165,11 +165,21 @@ class ProductService {
                 ...optionName,
                 ...optionType,
                 ...dateO,
-                "$model.company_id$": user.comp_id,
+                [Op.or]: [{"$model.company_id$": user.comp_id}, {"$warehouseProduct.warehouse.company_id$": user.comp_id, "$warehouseProduct.is_active$": true}],
                 is_active: true,
             },
             attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status", "createdAt"],
             include: [
+                {
+                    model: this.ProductModel,
+                    attributes: ["id", "order_id", "warehouse_id"],
+                    include: [
+                        {
+                            model: Warehouse,
+                            attributes: ["name", "company_id", "admin", "type"],
+                        }
+                    ],
+                },
                 {
                     model: Models,
                     attributes: ["name", "price", "sale", "code"],
@@ -186,13 +196,13 @@ class ProductService {
                     include: [
                         {
                             model: User,
-                            attributes: ["id", "name", "phone"]
+                            attributes: ["id", "name", "phone"],
                         },
                         {
                             model: this.Client,
-                            attributes: ["name", "phone"]
-                        }
-                    ]
+                            attributes: ["name", "phone"],
+                        },
+                    ],
                 },
             ],
             offset,
@@ -225,8 +235,7 @@ class ProductService {
             { where: { id: id } }
         );
 
-        await logOrderChanged(id, userId)
-
+        await logOrderChanged(id, userId);
 
         product.is_active = false;
         await product.save();
@@ -252,7 +261,7 @@ class ProductService {
                 name: company.name + " склад",
                 company_id: company.id,
                 admin: user.id,
-                type: "b2b склад"
+                type: "b2b склад",
             });
         }
 
@@ -269,7 +278,7 @@ class ProductService {
             ...data,
         });
 
-        await logOrderChanged(order.id, user.id)
+        await logOrderChanged(order.id, user.id);
 
         return await this.ProductModel.create({
             warehouse_id: warehouse.id,

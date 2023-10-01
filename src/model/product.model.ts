@@ -30,4 +30,6 @@ export class Product extends Model<Product> implements IProduct {
 
     @Column({ type: DataType.BOOLEAN, defaultValue: true })
     is_active: boolean;
+
+    
 }
