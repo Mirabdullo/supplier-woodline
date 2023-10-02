@@ -160,13 +160,18 @@ class ProductService {
 
         const { count, rows: products } = await Order.findAndCountAll({
             where: {
+                [Op.or]: [
+                    { "$model.company_id$": user.comp_id, status: "NEW" },
+                    {
+                        "$warehouseProduct.warehouse.company_id$": user.comp_id,
+                        "$warehouseProduct.is_active$": true,
+                    },
+                ],
                 ...options,
                 ...optionStatus,
                 ...optionName,
                 ...optionType,
                 ...dateO,
-                [Op.or]: [{"$model.company_id$": user.comp_id}, {"$warehouseProduct.warehouse.company_id$": user.comp_id, "$warehouseProduct.is_active$": true}],
-                is_active: true,
             },
             attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status", "createdAt"],
             include: [
@@ -177,7 +182,7 @@ class ProductService {
                         {
                             model: Warehouse,
                             attributes: ["name", "company_id", "admin", "type"],
-                        }
+                        },
                     ],
                 },
                 {
