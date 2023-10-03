@@ -93,9 +93,15 @@ class ProductService {
         if (search) {
             options = {
                 [Op.or]: [
-                    { order_id: { [Op.iLike]: `%${search}%` } },
-                    { "$model.name$": { [Op.iLike]: `%${search}%` } },
-                    { tissue: { [Op.iLike]: `%${search}%` } },
+                    {
+                        order_id: { [Op.iLike]: `%${search}%` },
+                    },
+                    {
+                        "$model.name$": { [Op.iLike]: `%${search}%` },
+                    },
+                    {
+                        tissue: { [Op.iLike]: `%${search}%` },
+                    },
                 ],
             };
         }
@@ -160,24 +166,27 @@ class ProductService {
 
         const { count, rows: products } = await Order.findAndCountAll({
             where: {
-                [Op.or]: [
-                    { "$model.company_id$": user.comp_id, status: "NEW" },
+                [Op.and]: [
                     {
-                        "$warehouseProduct.warehouse.company_id$": user.comp_id,
-                        "$warehouseProduct.is_active$": true,
+                        [Op.or]: [
+                            {
+                                "$warehouseProduct.warehouse.company_id$": user.comp_id,
+                                "$warehouseProduct.is_active$": true,
+                            },
+                            {
+                                "$model.company_id$": user.comp_id,
+                                status: {[Op.in]: ["NEW", "REJECTED"]},
+                            },
+                        ],
                     },
+                    { ...options, ...optionStatus, ...optionName, ...optionType, ...dateO },
                 ],
-                ...options,
-                ...optionStatus,
-                ...optionName,
-                ...optionType,
-                ...dateO,
             },
             attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status", "createdAt"],
             include: [
                 {
                     model: this.ProductModel,
-                    attributes: ["id", "order_id", "warehouse_id"],
+                    attributes: ["id", "order_id", "warehouse_id", "is_active"],
                     include: [
                         {
                             model: Warehouse,
@@ -187,7 +196,7 @@ class ProductService {
                 },
                 {
                     model: Models,
-                    attributes: ["name", "price", "sale", "code"],
+                    attributes: ["name", "price", "sale", "code", "company_id"],
                     include: [
                         {
                             model: FurnitureType,
