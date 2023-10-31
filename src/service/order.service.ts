@@ -130,7 +130,7 @@ class OrderService {
             );
         } else if (status === "REJECTED" && product.status === "REJECTED") {
             throw new HttpExeption(403, "already rejected");
-        } else if (status === "REJECTED" && product.status === "NEW") {
+        } else if (status === "REJECTED" && (product.status === "NEW" || product.status === "CHECKED")) {
             await this.OrderModel.update(
                 {
                     status: "REJECTED",
@@ -139,7 +139,9 @@ class OrderService {
             );
         } else if (status === "ACCEPTED" && product.status === "ACCEPTED") {
             throw new HttpExeption(403, "already accepted");
-        } else if (status === "ACCEPTED" && (product.status === "NEW" || product.status === "REJECTED" || product.status === "new")) {
+        } else if (status === 'CHECKED' && (product.status === 'NEW' || product.status === "new")) {
+            await this.OrderModel.update({status: "CHECKED"}, { where: { id: id }})
+        } else if (status === "ACCEPTED" && (product.status === "CHECKED" || product.status === "REJECTED")) {
             let warehouse = await this.WarehouseModel.findOne({ where: { company_id: user.comp_id } });
             if (!warehouse) {
                 const company = await this.CompanyModel.findOne({ where: { id: user.comp_id } });
@@ -187,6 +189,33 @@ class OrderService {
 
         await logOrderChanged(id, userId)
         return await this.OrderModel.findByPk(id);
+    }
+
+    public async getOrderById(id: string) {
+        const order = await this.OrderModel.findOne({
+            where: {
+                id: id,
+            },
+            attributes: ["id", "order_id", "tissue", "qty"],
+            include: [
+                {
+                    model: this.Models,
+                    attributes: ["name"],
+                    include: [
+                        {
+                            model: this.FurnitureType,
+                            attributes: ["name"],
+                        }
+                    ]
+                }
+            ]
+        })
+
+        if (!order) {
+            throw new HttpExeption(404, "Order not found")
+        }
+
+        return order
     }
 
     public async checkId(id: string) {

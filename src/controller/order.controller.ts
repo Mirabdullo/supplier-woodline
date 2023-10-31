@@ -37,6 +37,19 @@ class OrderController {
         }
     }
 
+    public GET_BY_ID = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+        try {
+            const id = req.params.id;
+            if (!id) {
+                throw new HttpExeption(404, 'Id not found')
+            }
+            res.json(await this.orderService.getOrderById(id))
+        } catch (error) {
+            console.log(error);
+            next(new HttpExeption(error.status, error.message))
+        }
+    }
+
     public CHECK_ID = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const id = req.params.id;

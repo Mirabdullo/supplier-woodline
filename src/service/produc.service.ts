@@ -111,7 +111,7 @@ class ProductService {
                 cathegory: type === "склад" ? "продажa со склада" : "заказ",
             };
         }
-        let statusArray = ["ACCEPTED", "REJECTED", "ACTIVE", "NEW", "DELIVERED", "SOLD"];
+        let statusArray = ["ACCEPTED", "REJECTED", "ACTIVE", "NEW","CHECKED", "DELIVERED", "SOLD"];
         if (status) {
             if (statusArray.includes(status)) {
                 if (status === "DELIVERED") {
@@ -175,7 +175,7 @@ class ProductService {
                             },
                             {
                                 "$model.company_id$": user.comp_id,
-                                status: {[Op.in]: ["NEW", "REJECTED"]},
+                                status: {[Op.in]: ["NEW", "REJECTED", "CHECKED"]},
                             },
                         ],
                     },
@@ -294,11 +294,13 @@ class ProductService {
 
         await logOrderChanged(order.id, user.id);
 
-        return await this.ProductModel.create({
+        await this.ProductModel.create({
             warehouse_id: warehouse.id,
             order_id: order.id,
             is_active: true,
         });
+
+        return order
     }
 }
 

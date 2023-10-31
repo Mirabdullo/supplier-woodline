@@ -15,6 +15,7 @@ class OrderRoutes {
     public initializeRoutes() { 
         this.router.get(`${this.path}`, middleware, this.orderController.GET)
         this.router.get(`${this.path}/get-id`, middleware, this.orderController.GET_ID)
+        this.router.get(`${this.path}-by-id/:id`, middleware, this.orderController.GET_BY_ID)
         this.router.get(`${this.path}/:id`, middleware, this.orderController.CHECK_ID)
         this.router.put(`${this.path}/:id`, middleware, this.orderController.CHANGE_STATUS)
     }
