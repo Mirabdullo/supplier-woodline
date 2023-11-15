@@ -63,6 +63,9 @@ export class Order extends Model<Order> implements IOrder {
     @Column({type: DataType.UUID, allowNull: true})
     seller_id?: string;
 
+    @Column({type: DataType.STRING})
+    direction: string;
+
     @ForeignKey(() => Models)
     @Column({ type: DataType.UUID, allowNull: false })
     model_id: string;

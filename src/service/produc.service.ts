@@ -111,7 +111,7 @@ class ProductService {
                 cathegory: type === "склад" ? "продажa со склада" : "заказ",
             };
         }
-        let statusArray = ["ACCEPTED", "REJECTED", "ACTIVE", "NEW","CHECKED", "DELIVERED", "SOLD"];
+        let statusArray = ["ACCEPTED", "REJECTED", "ACTIVE", "NEW", "CHECKED", "DELIVERED", "SOLD"];
         if (status) {
             if (statusArray.includes(status)) {
                 if (status === "DELIVERED") {
@@ -175,14 +175,14 @@ class ProductService {
                             },
                             {
                                 "$model.company_id$": user.comp_id,
-                                status: {[Op.in]: ["NEW", "REJECTED", "CHECKED"]},
+                                status: { [Op.in]: ["NEW", "REJECTED", "CHECKED"] },
                             },
                         ],
                     },
                     { ...options, ...optionStatus, ...optionName, ...optionType, ...dateO },
                 ],
             },
-            attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status", "createdAt"],
+            attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status", "createdAt", "direction"],
             include: [
                 {
                     model: this.ProductModel,
@@ -300,7 +300,7 @@ class ProductService {
             is_active: true,
         });
 
-        return order
+        return order;
     }
 }
 

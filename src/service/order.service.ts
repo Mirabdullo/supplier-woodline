@@ -70,7 +70,7 @@ class OrderService {
                 "$model.company_id$": user.comp_id,
                 createdAt: { [Op.between]: [startDate, endDate] },
             },
-            attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status", "createdAt"],
+            attributes: ["id", "order_id", "cathegory", "tissue", "title", "cost", "sale", "qty", "sum", "status", "createdAt", "direction"],
             include: [
                 {
                     model: this.Models,
