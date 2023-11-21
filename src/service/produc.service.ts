@@ -113,7 +113,19 @@ class ProductService {
         }
         let statusArray = ["ACCEPTED", "REJECTED", "ACTIVE", "NEW", "CHECKED", "DELIVERED", "SOLD"];
         if (status) {
-            if (statusArray.includes(status)) {
+            if (Array.isArray(status)) {
+                if (status.includes("ACCEPTED")) {
+                    status.push("CREATED");
+                } else if (status.includes("DELIVERED")) {
+                    status.push("TRANSFERED");
+                } else if (status.includes("ACTIVE")) {
+                    status.push("SOLD_AND_CHECKED");
+                }
+
+                optionStatus = {
+                    status: { [Op.in]: status },
+                };
+            } else if (statusArray.includes(status)) {
                 if (status === "DELIVERED") {
                     optionStatus = {
                         status: { [Op.in]: ["DELIVERED", "TRANSFERED"] },
