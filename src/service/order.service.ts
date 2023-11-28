@@ -139,8 +139,8 @@ class OrderService {
             );
         } else if (status === "ACCEPTED" && product.status === "ACCEPTED") {
             throw new HttpExeption(403, "already accepted");
-        } else if (status === 'CHECKED' && (product.status === 'NEW' || product.status === "new")) {
-            await this.OrderModel.update({status: "CHECKED"}, { where: { id: id }})
+        } else if (status === "CHECKED" && (product.status === "NEW" || product.status === "new")) {
+            await this.OrderModel.update({ status: "CHECKED" }, { where: { id: id } });
         } else if (status === "ACCEPTED" && (product.status === "CHECKED" || product.status === "REJECTED")) {
             let warehouse = await this.WarehouseModel.findOne({ where: { company_id: user.comp_id } });
             if (!warehouse) {
@@ -163,16 +163,26 @@ class OrderService {
                 },
                 { where: { id: id } }
             );
-
-            await this.ProductModel.create({
-                warehouse_id: warehouse.id,
-                order_id: id,
-                is_active: true,
+            const checkProduct = await this.ProductModel.findOne({
+                where: {
+                    warehouse_id: warehouse.id,
+                    order_id: id,
+                    is_active: true,
+                },
             });
+            if (checkProduct) {
+                throw new HttpExeption(400, "Product already created");
+            } else {
+                await this.ProductModel.create({
+                    warehouse_id: warehouse.id,
+                    order_id: id,
+                    is_active: true,
+                });
+            }
         } else if (status === "SOLD_AND_CHECKED" && product.status === "SOLD_AND_CHECKED") {
             throw new HttpExeption(403, "already SOLD_AND_CHECKED");
         } else if (status === "SOLD_AND_CHECKED") {
-            const statuses = ["ACCEPTED", "SOLD"]
+            const statuses = ["ACCEPTED", "SOLD"];
             if (statuses.includes(product.status)) {
                 await this.OrderModel.update(
                     {
@@ -187,7 +197,7 @@ class OrderService {
             throw new HttpExeption(403, "Invalid status");
         }
 
-        await logOrderChanged(id, userId)
+        await logOrderChanged(id, userId);
         return await this.OrderModel.findByPk(id);
     }
 
@@ -205,17 +215,17 @@ class OrderService {
                         {
                             model: this.FurnitureType,
                             attributes: ["name"],
-                        }
-                    ]
-                }
-            ]
-        })
+                        },
+                    ],
+                },
+            ],
+        });
 
         if (!order) {
-            throw new HttpExeption(404, "Order not found")
+            throw new HttpExeption(404, "Order not found");
         }
 
-        return order
+        return order;
     }
 
     public async checkId(id: string) {
